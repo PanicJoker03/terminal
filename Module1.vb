@@ -1,15 +1,15 @@
 Imports System
 Imports System.IO
-Imports Microsoft.VisualBasic
 
-Module Module1
-    Sub Main()
+Module Program
+
+    Sub ModuleONE()
         Dim priority_a As String = ""
         Dim priority_b As String = ""
         Dim priority_c As String = ""
-        
+
         Console.WriteLine("----------------------------")
-        Console.WriteLine("  PRIORITIES CHECK V.1.0.1  ")
+        Console.WriteLine("  PRIORITIES CHECK V.1.0.4  ")
         Console.WriteLine("----------------------------")
         Console.WriteLine("HELLO WORLD")
         Console.WriteLine("WHAT'S THE PRIORITY A TODAY:")
@@ -17,7 +17,7 @@ Module Module1
 
         Console.WriteLine("WHAT'S THE PRIORITY B TODAY:")
         priority_b = Console.ReadLine().ToUpper()
-        
+
         Console.WriteLine("WHAT'S THE PRIORITY C TODAY:")
         priority_c = Console.ReadLine().ToUpper()
 
@@ -52,6 +52,62 @@ Module Module1
         End Using
         Console.WriteLine("PRESS ANY KEY TO FINALIZE PROGRAM...")
         Console.ReadKey()
+
+    End Sub
+    Sub ModuleTWO()
+        'Count to ten
+        Console.WriteLine("COUNT TO TEN: ")
+        For counter = 1 To 10
+            Threading.Thread.Sleep(1000)
+            Console.WriteLine(++counter)
+        Next
+        Console.ReadKey()
+        Console.WriteLine("PRESS ANY KEY TO EXIT PROGRAM...")
+    End Sub
+    Sub ModuleTHREE()
+        Dim reality As Integer = New Random().Next(0, 2)
+
+        Console.WriteLine("REALITY CHECK")
+        Console.WriteLine(reality)
+        Console.WriteLine("PRESS ANY KEY TO FINALIZE PROGRAM...")
+        Console.ReadKey()
     End Sub
 
+    Sub Main(args As String())
+Init:
+        Console.WriteLine("SAY THE WORD TO ACTIVATE THE GOLEM:")
+        Dim optTxt As String = Console.ReadLine()
+
+        If optTxt.ToUpper() <> "EMETH" Then
+            Console.WriteLine("YOU SHALL NOT PASS!")
+            Console.ReadKey()
+            GoTo Init
+        End If
+
+        While True
+            Console.WriteLine("WHICH:")
+            optTxt = Console.ReadLine()
+            Dim opt As Integer = 0
+            Integer.TryParse(optTxt, opt)
+            If opt = 1 Then
+                ModuleONE()
+                'Exit Sub
+            End If
+
+            If opt = 2 Then
+                ModuleTWO()
+                'Exit Sub
+            End If
+
+            If opt = 3 Then
+                ModuleTHREE()
+                'Exit Sub
+            End If
+
+            If optTxt.ToUpper() = "METH" Then
+                Exit While
+            End If
+
+        End While
+    End Sub
 End Module
