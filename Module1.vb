@@ -9,7 +9,7 @@ Module Program
         Dim priority_c As String = ""
 
         Console.WriteLine("----------------------------")
-        Console.WriteLine("  PRIORITIES CHECK V.1.0.3  ")
+        Console.WriteLine("  PRIORITIES CHECK V.1.0.4  ")
         Console.WriteLine("----------------------------")
         Console.WriteLine("HELLO WORLD")
         Console.WriteLine("WHAT'S THE PRIORITY A TODAY:")
@@ -74,24 +74,38 @@ Module Program
     End Sub
 
     Sub Main(args As String())
+Init:
+        Console.WriteLine("SAY THE WORD TO ACTIVATE THE GOLEM:")
+        Dim optTxt As String = Console.ReadLine()
+
+        If optTxt.ToUpper() <> "EMETH" Then
+            Console.WriteLine("YOU SHALL NOT PASS!")
+            Console.ReadKey()
+            GoTo Init
+        End If
+
         While True
             Console.WriteLine("WHICH:")
-            Dim optTxt As String = Console.ReadLine()
+            optTxt = Console.ReadLine()
             Dim opt As Integer = 0
             Integer.TryParse(optTxt, opt)
             If opt = 1 Then
                 ModuleONE()
-                Exit Sub
+                'Exit Sub
             End If
 
             If opt = 2 Then
                 ModuleTWO()
-                Exit Sub
+                'Exit Sub
             End If
 
             If opt = 3 Then
                 ModuleTHREE()
-                Exit Sub
+                'Exit Sub
+            End If
+
+            If optTxt.ToUpper() = "METH" Then
+                Exit While
             End If
 
         End While
