@@ -9,30 +9,31 @@ using System.Threading;
 /// 
 class Program
 {
+    
     static void ModuleONE()
     {
         string priorityA = "";
         string priorityB = "";
         string priorityC = "";
 
-        ConsissPrintLine("----------------------------");
-        ConsissPrintLine("       CONSISS V.11.0.5     ");
-        ConsissPrintLine("----------------------------");
+        AegisPrintLine("----------------------------");
+        AegisPrintLine("    Aegis HyperV.11.0.6     ");
+        AegisPrintLine("----------------------------");
 
-        ConsissPrintLine("WHAT'S THE PRIORITY A TODAY:");
+        AegisPrintLine("WHAT'S THE PRIORITY A TODAY:");
         priorityA = (Console.ReadLine() ?? "").ToUpper();
 
-        ConsissPrintLine("WHAT'S THE PRIORITY B TODAY:");
+        AegisPrintLine("WHAT'S THE PRIORITY B TODAY:");
         priorityB = (Console.ReadLine() ?? "").ToUpper();
 
-        ConsissPrintLine("WHAT'S THE PRIORITY C TODAY:");
+        AegisPrintLine("WHAT'S THE PRIORITY C TODAY:");
         priorityC = (Console.ReadLine() ?? "").ToUpper();
 
         string todaySign = DateTime.Now.ToString("ddMMyyyy");
 
-        ConsissPrintLine($"OK: {priorityA}");
-        ConsissPrintLine($"OK: {priorityB}");
-        ConsissPrintLine($"OK: {priorityC}");
+        AegisPrintLine($"OK: {priorityA}");
+        AegisPrintLine($"OK: {priorityB}");
+        AegisPrintLine($"OK: {priorityC}");
 
         string outPath = Path.Combine(AppContext.BaseDirectory, $"OUT_{todaySign}.txt");
 
@@ -44,12 +45,12 @@ class Program
 
             while (true)
             {
-                ConsissPrintLine("ANOTHER TASK TODAY OR NOW (YES/NO):");
+                AegisPrintLine("ANOTHER TASK TODAY OR NOW (YES/NO):");
                 string anotherTask = (Console.ReadLine() ?? "").ToUpper();
 
                 if (anotherTask == "Y" || anotherTask == "YES")
                 {
-                    ConsissPrintLine("WHICH:");
+                    AegisPrintLine("WHICH:");
                     string which = (Console.ReadLine() ?? "").ToUpper();
                     writer.WriteLine($"ANOTHER TASK IS: {which}");
                 }
@@ -59,27 +60,27 @@ class Program
                 }
                 else
                 {
-                    ConsissPrintLine("I DO NOT UNDERSTAND THAT");
+                    AegisPrintLine("I DO NOT UNDERSTAND THAT");
                 }
             }
         }
 
-        ConsissPrintLine("PRESS ANY KEY TO FINALIZE PROGRAM...");
+        AegisPrintLine("PRESS ANY KEY TO FINALIZE PROGRAM...");
         Console.ReadKey();
     }
 
 
     static void ModuleTWO()
     {
-        ConsissPrintLine("COUNT TO TEN:");
+        AegisPrintLine("COUNT TO TEN:");
 
         for (int counter = 1; counter <= 10; counter++)
         {
             Thread.Sleep(1000);
-            ConsissPrintLine(counter);
+            AegisPrintLine(counter);
         }
 
-        ConsissPrintLine("PRESS ANY KEY TO EXIT PROGRAM...");
+        AegisPrintLine("PRESS ANY KEY TO EXIT PROGRAM...");
         Console.ReadKey();
     }
 
@@ -88,27 +89,27 @@ class Program
     {
         int reality = new Random().Next(0, 2);
 
-        ConsissPrintLine("REALITY CHECK");
-        ConsissPrintLine(reality);
+        AegisPrintLine("REALITY CHECK");
+        AegisPrintLine(reality);
 
-        ConsissPrintLine("PRESS ANY KEY TO FINALIZE PROGRAM...");
+        AegisPrintLine("PRESS ANY KEY TO FINALIZE PROGRAM...");
         Console.ReadKey();
     }
 
 
     static void ModuleFOUR()
     {
-        ConsissPrintLine("BOSS CHECK");
-        ConsissPrintLine("HOW'S THE BOSS?");
+        AegisPrintLine("BOSS CHECK");
+        AegisPrintLine("HOW'S THE BOSS?");
         string boss = (Console.ReadLine() ?? "").ToUpper();
 
-        ConsissPrintLine($"BOSS STATUS: {boss}");
-        ConsissPrintLine("PRESS ANY KEY TO FINALIZE PROGRAM...");
+        AegisPrintLine($"BOSS STATUS: {boss}");
+        AegisPrintLine("PRESS ANY KEY TO FINALIZE PROGRAM...");
         Console.ReadKey();
     }
 
 
-    static void ConsissPrintLine(object line)
+    static void AegisPrintLine(object line)
     {
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine($"> {line}");
@@ -118,21 +119,21 @@ class Program
 
     static void Main(string[] args)
     {
-        ConsissPrintLine("CONSISS");
-        ConsissPrintLine("TELL ME, WHAT'S YOUR NAME?");
+        AegisPrintLine("AEGIS HYPER");
+        AegisPrintLine("TELL ME, WHAT'S YOUR NAME?");
         string name = (Console.ReadLine() ?? "").ToUpper();
 
         while (true)
         {
             Console.Clear();
-            ConsissPrintLine($"HELLO {name}");
-            ConsissPrintLine("SAY THE WORD TO ACTIVATE THE GOLEM:");
+            AegisPrintLine($"HELLO {name}");
+            AegisPrintLine("SAY THE WORD TO ACTIVATE THE GOLEM:");
 
             string optTxt = Console.ReadLine() ?? "";
 
             if (optTxt.ToUpper() != "EMETH")
             {
-                ConsissPrintLine("YOU SHALL NOT PASS!");
+                AegisPrintLine("YOU SHALL NOT PASS!");
                 Console.ReadKey();
                 continue;
             }
@@ -143,8 +144,8 @@ class Program
         while (true)
         {
             Console.Clear();
-            ConsissPrintLine($"GUEST {name}");
-            ConsissPrintLine("WHICH:");
+            AegisPrintLine($"GUEST {name}");
+            AegisPrintLine("WHICH:");
 
             string optTxt = Console.ReadLine() ?? "";
             int opt = 0;
@@ -164,7 +165,7 @@ class Program
             if (command == "LOAD")
             {
                 Console.Clear();
-                ConsissPrintLine("DAY <<DDMMYYYY>>");
+                AegisPrintLine("DAY <<DDMMYYYY>>");
                 string dayToLoad = (Console.ReadLine() ?? "").ToUpper();
 
                 try
@@ -173,11 +174,11 @@ class Program
                     string content = File.ReadAllText(filePath);
 
                     Console.Clear();
-                    ConsissPrintLine(content);
+                    AegisPrintLine(content);
                 }
                 catch
                 {
-                    ConsissPrintLine("NO RECORD FOUND");
+                    AegisPrintLine("NO RECORD FOUND");
                 }
 
                 Console.ReadKey();
@@ -188,21 +189,44 @@ class Program
             {
                 //intención, durar en un trabajo
                 Console.Clear();
-                ConsissPrintLine(" Jefe tiene expectativas");
-                ConsissPrintLine("              Necesidades emp");
-                ConsissPrintLine("                  no                  si");
-                ConsissPrintLine("          -------------------------------------------");
-                ConsissPrintLine("      no  |                    |                    |");
-                ConsissPrintLine("  e       |        basura      |       area tecni   | ");
-                ConsissPrintLine("  x       |                    |                    |");
-                ConsissPrintLine("  p       -------------------------------------------");
-                ConsissPrintLine("  e       |                    |                    |");
-                ConsissPrintLine("  c    si |        area        |      area          |");
-                ConsissPrintLine("  t       |       politica     |     estrategic     |");
-                ConsissPrintLine("          -------------------------------------------");
-                ConsissPrintLine("");
-                ConsissPrintLine("  jefe");
-                ConsissPrintLine(" jefe es humano, comunicación, hacer preguntar no hostigar.");
+                AegisPrintLine(" Jefe tiene expectativas");
+                AegisPrintLine("              Necesidades emp");
+                AegisPrintLine("                  no                  si");
+                AegisPrintLine("          -------------------------------------------");
+                AegisPrintLine("      no  |                    |                    |");
+                AegisPrintLine("  e       |        basura      |       area tecni   | ");
+                AegisPrintLine("  x       |                    |                    |");
+                AegisPrintLine("  p       -------------------------------------------");
+                AegisPrintLine("  e       |                    |                    |");
+                AegisPrintLine("  c    si |        area        |      area          |");
+                AegisPrintLine("  t       |       politica     |     estrategic     |");
+                AegisPrintLine("          -------------------------------------------");
+                AegisPrintLine("");
+                AegisPrintLine("  jefe");
+                AegisPrintLine(" jefe es humano, comunicación, hacer preguntar no hostigar.");
+                //Relacionarse con las personas
+                Console.ReadKey();
+            }
+
+            if (command == "CLIENT")
+            {
+                //intención, durar en un trabajo
+                Console.Clear();
+                AegisPrintLine(" Cliente tiene necesidades");
+                AegisPrintLine("              Necesidades cliente");
+                AegisPrintLine("                  no                  si");
+                AegisPrintLine("          -------------------------------------------");
+                AegisPrintLine("      no  |                    |                    |");
+                AegisPrintLine("  p       |        basura      |       idea         | ");
+                AegisPrintLine("  r       |                    |                    |");
+                AegisPrintLine("  o       -------------------------------------------");
+                AegisPrintLine("  d       |                    |                    |");
+                AegisPrintLine("  u    si |        servicio    |      venta         |");
+                AegisPrintLine("  c       |                    |     estrategic     |");
+                AegisPrintLine("          -------------------------------------------");
+                AegisPrintLine("");
+                AegisPrintLine(" cliente");
+                AegisPrintLine(" cliente siempre tiene la razon");
                 //Relacionarse con las personas
                 Console.ReadKey();
             }
@@ -222,12 +246,12 @@ class Program
                         string fileName = Path.GetFileNameWithoutExtension(record);
                         string datePart = fileName.Replace("OUT_", "");
 
-                        ConsissPrintLine(datePart);
+                        AegisPrintLine(datePart);
                     }
                 }
                 catch
                 {
-                    ConsissPrintLine("ERROR READING FILES");
+                    AegisPrintLine("ERROR READING FILES");
                 }
 
                 Console.ReadKey();
