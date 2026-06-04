@@ -1,7 +1,13 @@
 # GOLEM
 GOLEMSharp is a program that helps me to resolve my daily work duties
 
-⚠️ USE AT YOUR OWN RISK ⚠️
+## Features
 
-EPOCH ON FEBRUARY 11 2025
-Epoch on June 04 2026
+* Priorities from day
+* Look up for past days priorities
+* Boss tracking
+* Calm operation
+* Enterprise Chart
+* Client Neccesities Chart
+
+⚠️ USE AT YOUR OWN RISK ⚠️

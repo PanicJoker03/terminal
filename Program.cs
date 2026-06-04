@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -9,8 +9,8 @@ using System.Threading;
 /// 
 class Program
 {
-    
-    static void ModuleONE()
+    //todo: refactorize
+    static void TakePriorities()
     {
         string priorityA = "";
         string priorityB = "";
@@ -70,7 +70,7 @@ class Program
     }
 
 
-    static void ModuleTWO()
+    static void CountToTen()
     {
         AegisPrintLine("COUNT TO TEN:");
 
@@ -85,7 +85,7 @@ class Program
     }
 
 
-    static void ModuleTHREE()
+    static void CoinToss()
     {
         int reality = new Random().Next(0, 2);
 
@@ -97,7 +97,7 @@ class Program
     }
 
 
-    static void ModuleFOUR()
+    static void CheckBoss()
     {
         AegisPrintLine("BOSS CHECK");
         AegisPrintLine("HOW'S THE BOSS?");
@@ -153,10 +153,10 @@ class Program
 
             switch (opt)
             {
-                case 1: ModuleONE(); break;
-                case 2: ModuleTWO(); break;
-                case 3: ModuleTHREE(); break;
-                case 4: ModuleFOUR(); break;
+                case 1: TakePriorities(); break;
+                case 2: CountToTen(); break;
+                case 3: CoinToss(); break;
+                case 4: CheckBoss(); break;
             }
 
             string command = optTxt.ToUpper();
