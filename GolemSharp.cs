@@ -2,7 +2,7 @@ namespace GolemSharp
 {
     public class GolemSharp
     {
-        public void TakePriorities()
+        private void TakePriorities()
         {
             string priorityA = "";
             string priorityB = "";
@@ -62,7 +62,7 @@ namespace GolemSharp
         }
 
 
-        public void CountToTen()
+        private void CountToTen()
         {
             AegisPrintLine("COUNT TO TEN:");
 
@@ -77,7 +77,7 @@ namespace GolemSharp
         }
 
 
-        public void CoinToss()
+        private void CoinToss()
         {
             int reality = new Random().Next(0, 2);
 
@@ -89,7 +89,7 @@ namespace GolemSharp
         }
 
 
-        public void CheckBoss()
+        private void CheckBoss()
         {
             AegisPrintLine("BOSS CHECK");
             AegisPrintLine("HOW'S THE BOSS?");
@@ -101,12 +101,157 @@ namespace GolemSharp
         }
 
 
-        public void AegisPrintLine(object line)
+        private void AegisPrintLine(object line)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"> {line}");
             Console.ResetColor();
         }
 
+        public void Act()
+        {
+            AegisPrintLine("AEGIS HYPER");
+            AegisPrintLine("TELL ME, WHAT'S YOUR NAME?");
+            string name = (Console.ReadLine() ?? "").ToUpper();
+
+            while (true)
+            {
+                Console.Clear();
+                AegisPrintLine($"HELLO {name}");
+                AegisPrintLine("SAY THE WORD TO ACTIVATE THE GOLEM:");
+
+                string optTxt = Console.ReadLine() ?? "";
+
+                if (optTxt.ToUpper() != "EMETH")
+                {
+                    AegisPrintLine("YOU SHALL NOT PASS!");
+                    Console.ReadKey();
+                    continue;
+                }
+
+                break;
+            }
+
+            while (true)
+            {
+                Console.Clear();
+                AegisPrintLine($"GUEST {name}");
+                AegisPrintLine("WHICH:");
+
+                string optTxt = Console.ReadLine() ?? "";
+                int opt = 0;
+                int.TryParse(optTxt, out opt);
+
+                switch (opt)
+                {
+                    case 1: TakePriorities(); break;
+                    case 2: CountToTen(); break;
+                    case 3: CoinToss(); break;
+                    case 4: CheckBoss(); break;
+                }
+
+                string command = optTxt.ToUpper();
+
+                // LOAD
+                if (command == "LOAD")
+                {
+                    Console.Clear();
+                    AegisPrintLine("DAY <<DDMMYYYY>>");
+                    string dayToLoad = (Console.ReadLine() ?? "").ToUpper();
+
+                    try
+                    {
+                        string filePath = Path.Combine(AppContext.BaseDirectory, $"OUT_{dayToLoad}.txt");
+                        string content = File.ReadAllText(filePath);
+
+                        Console.Clear();
+                        AegisPrintLine(content);
+                    }
+                    catch
+                    {
+                        AegisPrintLine("NO RECORD FOUND");
+                    }
+
+                    Console.ReadKey();
+                }
+
+                // LOOKUP
+                if (command == "CHART")
+                {
+                    //intención, durar en un trabajo
+                    Console.Clear();
+                    AegisPrintLine(" Jefe tiene expectativas");
+                    AegisPrintLine("              Necesidades emp");
+                    AegisPrintLine("                  no                  si");
+                    AegisPrintLine("          -------------------------------------------");
+                    AegisPrintLine("      no  |                    |                    |");
+                    AegisPrintLine("  e       |        basura      |       area tecni   | ");
+                    AegisPrintLine("  x       |                    |                    |");
+                    AegisPrintLine("  p       -------------------------------------------");
+                    AegisPrintLine("  e       |                    |                    |");
+                    AegisPrintLine("  c    si |        area        |      area          |");
+                    AegisPrintLine("  t       |       politica     |     estrategic     |");
+                    AegisPrintLine("          -------------------------------------------");
+                    AegisPrintLine("");
+                    AegisPrintLine("  jefe");
+                    AegisPrintLine(" jefe es humano, comunicación, hacer preguntar no hostigar.");
+                    //Relacionarse con las personas
+                    Console.ReadKey();
+                }
+
+                if (command == "CLIENT")
+                {
+                    //intención, durar en un trabajo
+                    Console.Clear();
+                    AegisPrintLine(" Cliente tiene necesidades");
+                    AegisPrintLine("              Necesidades cliente");
+                    AegisPrintLine("                  no                  si");
+                    AegisPrintLine("          -------------------------------------------");
+                    AegisPrintLine("      no  |                    |                    |");
+                    AegisPrintLine("  p       |        basura      |       idea         | ");
+                    AegisPrintLine("  r       |                    |                    |");
+                    AegisPrintLine("  o       -------------------------------------------");
+                    AegisPrintLine("  d       |                    |                    |");
+                    AegisPrintLine("  u    si |        servicio    |      venta         |");
+                    AegisPrintLine("  c       |                    |     estrategic     |");
+                    AegisPrintLine("          -------------------------------------------");
+                    AegisPrintLine("");
+                    AegisPrintLine(" cliente");
+                    AegisPrintLine(" cliente siempre tiene la razon");
+                    //Relacionarse con las personas
+                    Console.ReadKey();
+                }
+
+                // LOOKUP
+                if (command == "LOOKUP")
+                {
+                    Console.Clear();
+
+                    try
+                    {
+                        string exeDirectory = AppContext.BaseDirectory;
+                        var records = Directory.GetFiles(exeDirectory, "OUT_*.txt");
+
+                        foreach (var record in records)
+                        {
+                            string fileName = Path.GetFileNameWithoutExtension(record);
+                            string datePart = fileName.Replace("OUT_", "");
+
+                            AegisPrintLine(datePart);
+                        }
+                    }
+                    catch
+                    {
+                        AegisPrintLine("ERROR READING FILES");
+                    }
+
+                    Console.ReadKey();
+                }
+
+                // EXIT
+                if (command == "METH")
+                    break;
+            }
+        }
     }
 }
