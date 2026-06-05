@@ -1,3 +1,5 @@
+using GolemSharp.Modules;
+
 namespace GolemSharp
 {
     public class GolemSharp
@@ -6,131 +8,34 @@ namespace GolemSharp
         const string SHUTDOWN_WORD = "METH";
         public string? name {get; private set;}
         private string userName = "";
-        public ConsoleColor color {get; private set;}
-        public GolemSharp(){}
+
+        private ConsoleTerminal terminal;
+        private PrioritiesChecker prioritiesChecker;
+        private Boss boss;
+        private RealityCheck realityCheck;
+        private Counter counter;
         public GolemSharp(string? name, ConsoleColor color){ 
             this.name = name;
-            this.color = color;
-        }
-        private void TakePriorities()
-        {
-            string priorityA = "";
-            string priorityB = "";
-            string priorityC = "";
-
-            ClearConsole();
-
-            PrintLine($"----------------------------");
-            PrintLine($"    {name}V.11.0.6");
-            PrintLine($"----------------------------");
-
-            PrintLine("WHAT'S THE PRIORITY A TODAY:");
-            priorityA = (Console.ReadLine() ?? "").ToUpper();
-
-            PrintLine("WHAT'S THE PRIORITY B TODAY:");
-            priorityB = (Console.ReadLine() ?? "").ToUpper();
-
-            PrintLine("WHAT'S THE PRIORITY C TODAY:");
-            priorityC = (Console.ReadLine() ?? "").ToUpper();
-
-            string todaySign = DateTime.Now.ToString("ddMMyyyy");
-
-            PrintLine($"OK: {priorityA}");
-            PrintLine($"OK: {priorityB}");
-            PrintLine($"OK: {priorityC}");
-
-            string exeDirectory = AppContext.BaseDirectory;
-
-            string outPath = Path.Combine(exeDirectory, $"OUT_{todaySign}.txt");
-
-            using (var writer = new StreamWriter(outPath, false))
-            {
-                writer.WriteLine($"{todaySign} PRIORITY A IS: {priorityA}");
-                writer.WriteLine($"{todaySign} PRIORITY B IS: {priorityB}");
-                writer.WriteLine($"{todaySign} PRIORITY C IS: {priorityC}");
-
-                while (true)
-                {
-                    PrintLine("ANOTHER TASK TODAY OR NOW (YES/NO):");
-                    string anotherTask = (Console.ReadLine() ?? "").ToUpper();
-
-                    if (anotherTask == "Y" || anotherTask == "YES")
-                    {
-                        PrintLine("WHICH:");
-                        string which = (Console.ReadLine() ?? "").ToUpper();
-                        writer.WriteLine($"ANOTHER TASK IS: {which}");
-                    }
-                    else if (anotherTask == "N" || anotherTask == "NO")
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        PrintLine("I DO NOT UNDERSTAND THAT");
-                    }
-                }
-            }
-
-            PrintLine("PRESS ANY KEY TO FINALIZE PROGRAM...");
-            WaitUserInput();
-        }
-
-
-        private void CountToTen()
-        {
-            ClearConsole();
-            PrintLine("COUNT TO TEN:");
-
-            for (int counter = 1; counter <= 10; counter++)
-            {
-                Thread.Sleep(1000);
-                PrintLine(counter);
-            }
-
-            PrintLine("PRESS ANY KEY TO EXIT PROGRAM...");
-            WaitUserInput();
-        }
-
-        private void CoinToss()
-        {
-            int reality = new Random().Next(0, 2);
-
-            ClearConsole();
-            PrintLine("REALITY CHECK");
-            PrintLine(reality);
-
-            PrintLine("PRESS ANY KEY TO FINALIZE PROGRAM...");
-            WaitUserInput();
-        }
-
-
-        private void CheckBoss()
-        {
-            ClearConsole();
-            PrintLine("BOSS CHECK");
-            PrintLine("HOW'S THE BOSS?");
-            string boss = (Console.ReadLine() ?? "").ToUpper();
-
-            PrintLine($"BOSS STATUS: {boss}");
-            PrintLine("PRESS ANY KEY TO FINALIZE PROGRAM...");
-            WaitUserInput();
-        }
-
-        private void PrintLine(object line)
-        {
-            Console.ForegroundColor = color;
-            Console.WriteLine($"> {line}");
-            Console.ResetColor();
+            terminal = ConsoleTerminal.GetInstance();
+            terminal.TextColor = color;
+            prioritiesChecker = new PrioritiesChecker(name);
+            boss = new Boss();
+            counter = new Counter();
+            realityCheck = new RealityCheck();
         }
 
         private void HandleOption(int option)
         {
             switch (option)
             {
-                case 1: TakePriorities(); break;
-                case 2: CountToTen(); break;
-                case 3: CoinToss(); break;
-                case 4: CheckBoss(); break;
+                case 1: prioritiesChecker.TakePriorities(); 
+                    break;
+                case 2: counter.CountToTen(); 
+                    break;
+                case 3: realityCheck.CoinToss(); 
+                    break;
+                case 4: boss.CheckBoss(); 
+                    break;
             }
         }
 
@@ -162,52 +67,52 @@ namespace GolemSharp
 
         private void LoadPriorities()
         {
-            ClearConsole();
-            PrintLine("DAY <<DDMMYYYY>>");
-            string dayToLoad = (Console.ReadLine() ?? "").ToUpper();
+            terminal.ClearConsole();
+            terminal.PrintLine("DAY <<DDMMYYYY>>");
+            string dayToLoad = (terminal.ReadLine() ?? "").ToUpper();
 
             try
             {
                 string filePath = Path.Combine(AppContext.BaseDirectory, $"OUT_{dayToLoad}.txt");
                 string content = File.ReadAllText(filePath);
 
-                ClearConsole();
-                PrintLine(content);
+                terminal.ClearConsole();
+                terminal.PrintLine(content);
             }
             catch
             {
-                PrintLine("NO RECORD FOUND");
+                terminal.PrintLine("NO RECORD FOUND");
             }
 
-            WaitUserInput();
+            terminal.WaitUserInput();
         }
 
         private void PrintBossChart()
         {
             //intención, durar en un trabajo
-            ClearConsole();
-            PrintLine(" Jefe tiene expectativas");
-            PrintLine("              Necesidades emp");
-            PrintLine("                  no                  si");
-            PrintLine("          -------------------------------------------");
-            PrintLine("      no  |                    |                    |");
-            PrintLine("  e       |        basura      |       area tecni   | ");
-            PrintLine("  x       |                    |                    |");
-            PrintLine("  p       -------------------------------------------");
-            PrintLine("  e       |                    |                    |");
-            PrintLine("  c    si |        area        |      area          |");
-            PrintLine("  t       |       politica     |     estrategic     |");
-            PrintLine("          -------------------------------------------");
-            PrintLine("");
-            PrintLine("  jefe");
-            PrintLine(" jefe es humano, comunicación, hacer preguntar no hostigar.");
+            terminal.ClearConsole();
+            terminal.PrintLine(" Jefe tiene expectativas");
+            terminal.PrintLine("              Necesidades emp");
+            terminal.PrintLine("                  no                  si");
+            terminal.PrintLine("          -------------------------------------------");
+            terminal.PrintLine("      no  |                    |                    |");
+            terminal.PrintLine("  e       |        basura      |       area tecni   | ");
+            terminal.PrintLine("  x       |                    |                    |");
+            terminal.PrintLine("  p       -------------------------------------------");
+            terminal.PrintLine("  e       |                    |                    |");
+            terminal.PrintLine("  c    si |        area        |      area          |");
+            terminal.PrintLine("  t       |       politica     |     estrategic     |");
+            terminal.PrintLine("          -------------------------------------------");
+            terminal.PrintLine("");
+            terminal.PrintLine("  jefe");
+            terminal.PrintLine(" jefe es humano, comunicación, hacer preguntar no hostigar.");
             //Relacionarse con las personas
-            WaitUserInput();
+            terminal.WaitUserInput();
         }
 
         private void DoLookUp()
         {
-            ClearConsole();
+            terminal.ClearConsole();
 
             try
             {
@@ -219,38 +124,38 @@ namespace GolemSharp
                     string fileName = Path.GetFileNameWithoutExtension(record);
                     string datePart = fileName.Replace("OUT_", "");
 
-                    PrintLine(datePart);
+                    terminal.PrintLine(datePart);
                 }
             }
             catch
             {
-                PrintLine("ERROR READING FILES");
+                terminal.PrintLine("ERROR READING FILES");
             }
 
-            WaitUserInput();
+            terminal.WaitUserInput();
         }
 
         private void PrintClientChart()
         {
             //intención, durar en un trabajo
-            ClearConsole();
-            PrintLine(" Cliente tiene necesidades");
-            PrintLine("              Necesidades cliente");
-            PrintLine("                  no                  si");
-            PrintLine("          -------------------------------------------");
-            PrintLine("      no  |                    |                    |");
-            PrintLine("  p       |        basura      |       idea         | ");
-            PrintLine("  r       |                    |                    |");
-            PrintLine("  o       -------------------------------------------");
-            PrintLine("  d       |                    |                    |");
-            PrintLine("  u    si |        servicio    |      venta         |");
-            PrintLine("  c       |                    |     estrategic     |");
-            PrintLine("          -------------------------------------------");
-            PrintLine("");
-            PrintLine(" cliente");
-            PrintLine(" cliente siempre tiene la razon");
+            terminal.ClearConsole();
+            terminal.PrintLine(" Cliente tiene necesidades");
+            terminal.PrintLine("              Necesidades cliente");
+            terminal.PrintLine("                  no                  si");
+            terminal.PrintLine("          -------------------------------------------");
+            terminal.PrintLine("      no  |                    |                    |");
+            terminal.PrintLine("  p       |        basura      |       idea         | ");
+            terminal.PrintLine("  r       |                    |                    |");
+            terminal.PrintLine("  o       -------------------------------------------");
+            terminal.PrintLine("  d       |                    |                    |");
+            terminal.PrintLine("  u    si |        servicio    |      venta         |");
+            terminal.PrintLine("  c       |                    |     estrategic     |");
+            terminal.PrintLine("          -------------------------------------------");
+            terminal.PrintLine("");
+            terminal.PrintLine(" cliente");
+            terminal.PrintLine(" cliente siempre tiene la razon");
             //Relacionarse con las personas
-            WaitUserInput();
+            terminal.WaitUserInput();
         }
 
         public void Cycle()
@@ -258,11 +163,11 @@ namespace GolemSharp
             string command = "";
             while (command != SHUTDOWN_WORD)
             {
-                ClearConsole();
-                PrintLine($"GUEST {userName}");
-                PrintLine("WHICH:");
+                terminal.ClearConsole();
+                terminal.PrintLine($"GUEST {userName}");
+                terminal.PrintLine("WHICH:");
 
-                string optTxt = Console.ReadLine() ?? "";
+                string optTxt = terminal.ReadLine() ?? "";
                 int opt = 0;
                 int.TryParse(optTxt, out opt);
                 HandleOption(opt);
@@ -272,49 +177,41 @@ namespace GolemSharp
             }
         }
 
-        private void WaitUserInput()
-        {
-            Console.ReadKey();
-        }
 
         private void Guard()
         {
             string optTxt = "";
             while (optTxt != ACTIVATION_WORD)
             {
-                ClearConsole();
-                PrintLine($"HELLO {userName}");
-                PrintLine("SAY THE WORD TO ACTIVATE THE GOLEM:");
+                terminal.ClearConsole();
+                terminal.PrintLine($"HELLO {userName}");
+                terminal.PrintLine("SAY THE WORD TO ACTIVATE THE GOLEM:");
 
-                optTxt = Console.ReadLine()?.ToUpper() ?? "";
+                optTxt = terminal.ReadLine()?.ToUpper() ?? "";
 
                 if (optTxt == ACTIVATION_WORD)
                 {
                     return;
                 }
 
-                PrintLine("YOU SHALL NOT PASS!");
-                WaitUserInput();
+                terminal.PrintLine("YOU SHALL NOT PASS!");
+                terminal.WaitUserInput();
             }
         }
 
-        private void ClearConsole()
-        {
-            Console.Clear();
-        }
 
         private void InitialGreet()
         {
-            PrintLine($"{this.name?.ToUpper()}");
-            PrintLine("TELL ME, WHAT'S YOUR NAME?");
-            userName = (Console.ReadLine() ?? "").ToUpper();
+            terminal.PrintLine($"{this.name?.ToUpper()}");
+            terminal.PrintLine("TELL ME, WHAT'S YOUR NAME?");
+            userName = (terminal.ReadLine() ?? "").ToUpper();
         }
 
         private void DoShutDown()
         {
-            ClearConsole();
-            PrintLine("GOOD BYE...");
-            WaitUserInput();
+            terminal.ClearConsole();
+            terminal.PrintLine("GOOD BYE...");
+            terminal.WaitUserInput();
         }
 
         public void Run()
