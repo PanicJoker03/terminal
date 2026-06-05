@@ -14,8 +14,11 @@ namespace GolemSharp
         //todo: refactorize
         static void Main(string[] args)
         {
-            GolemSharp golem = new GolemSharp();
-            golem.Act();
+            GolemSharp golem = new GolemSharp(
+                "Aegis Hyper",
+                ConsoleColor.Yellow
+            );
+            golem.Run();
         }
     }
 }
