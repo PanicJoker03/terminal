@@ -10,4 +10,8 @@ GOLEMSharp is a program that helps me to resolve my daily work duties
 * Enterprise Chart
 * Client Neccesities Chart
 
+### TODO
+
+* convert it a web app 
+
 ⚠️ USE AT YOUR OWN RISK ⚠️

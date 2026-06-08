@@ -1,24 +1,23 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Threading;
-/// <summary>
-/// Cada dia mas trabajador
-/// al chile lo admito
-/// </summary>
-/// 
-namespace GolemSharp
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using GolemSharp;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<GolemRunner>();
+
+var app = builder.Build();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.MapHub<TerminalHub>("/terminalHub");
+
+app.MapGet("/start", (GolemRunner runner) =>
 {
-    class Program
-    {
-        //todo: refactorize
-        static void Main(string[] args)
-        {
-            GolemSharp golem = new GolemSharp(
-                "Aegis Hyper",
-                ConsoleColor.Yellow
-            );
-            golem.Run();
-        }
-    }
-}
+    runner.Start();
+    return Results.Ok();
+});
+
+app.Run();
