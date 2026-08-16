@@ -6,7 +6,7 @@ namespace GolemSharp
     {
         const string ACTIVATION_WORD = "EMETH";
         const string SHUTDOWN_WORD = "METH";
-        public string? name {get; private set;}
+        public string? name { get; private set; }
         private string userName = "";
 
         private ConsoleTerminal terminal;
@@ -14,6 +14,7 @@ namespace GolemSharp
         private Boss boss;
         private RealityCheck realityCheck;
         private Counter counter;
+
         public GolemSharp(string? name, ConsoleColor color){ 
             this.name = name;
             terminal = ConsoleTerminal.GetInstance();
@@ -91,21 +92,21 @@ namespace GolemSharp
         {
             //intención, durar en un trabajo
             terminal.ClearConsole();
-            terminal.PrintLine(" Jefe tiene expectativas");
-            terminal.PrintLine("              Necesidades emp");
-            terminal.PrintLine("                  no                  si");
-            terminal.PrintLine("          -------------------------------------------");
-            terminal.PrintLine("      no  |                    |                    |");
-            terminal.PrintLine("  e       |        basura      |       area tecni   | ");
-            terminal.PrintLine("  x       |                    |                    |");
-            terminal.PrintLine("  p       -------------------------------------------");
-            terminal.PrintLine("  e       |                    |                    |");
-            terminal.PrintLine("  c    si |        area        |      area          |");
-            terminal.PrintLine("  t       |       politica     |     estrategic     |");
-            terminal.PrintLine("          -------------------------------------------");
+            terminal.PrintLine(".Jefe.tiene.expectativas");
+            terminal.PrintLine("..............Necesidades.emp");
+            terminal.PrintLine("..................no...................si");
+            terminal.PrintLine("..........-------------------------------------------");
+            terminal.PrintLine("......no..|....................|....................|");
+            terminal.PrintLine("..e.......|........basura......|.......area.tecni...| ");
+            terminal.PrintLine("..x.......|....................|....................|");
+            terminal.PrintLine("..p.......-------------------------------------------");
+            terminal.PrintLine("..e.......|....................|....................|");
+            terminal.PrintLine("..c....si.|........area........|......area..........|");
+            terminal.PrintLine("..t.......|.......politica.....|.....estrategic.....|");
+            terminal.PrintLine("..........-------------------------------------------");
             terminal.PrintLine("");
-            terminal.PrintLine("  jefe");
-            terminal.PrintLine(" jefe es humano, comunicación, hacer preguntar no hostigar.");
+            terminal.PrintLine("..jefe");
+            terminal.PrintLine(".jefe.es.humano,.comunicación,.hacer.preguntar.no.hostigar.");
             //Relacionarse con las personas
             terminal.WaitUserInput();
         }
@@ -139,21 +140,21 @@ namespace GolemSharp
         {
             //intención, durar en un trabajo
             terminal.ClearConsole();
-            terminal.PrintLine(" Cliente tiene necesidades");
-            terminal.PrintLine("              Necesidades cliente");
-            terminal.PrintLine("                  no                  si");
-            terminal.PrintLine("          -------------------------------------------");
-            terminal.PrintLine("      no  |                    |                    |");
-            terminal.PrintLine("  p       |        basura      |       idea         | ");
-            terminal.PrintLine("  r       |                    |                    |");
-            terminal.PrintLine("  o       -------------------------------------------");
-            terminal.PrintLine("  d       |                    |                    |");
-            terminal.PrintLine("  u    si |        servicio    |      venta         |");
-            terminal.PrintLine("  c       |                    |     estrategic     |");
-            terminal.PrintLine("          -------------------------------------------");
+            terminal.PrintLine(".Cliente.tiene.necesidades");
+            terminal.PrintLine("..............Necesidades cliente");
+            terminal.PrintLine("..................no..................si");
+            terminal.PrintLine("..........-------------------------------------------");
+            terminal.PrintLine("......no..|....................|....................|");
+            terminal.PrintLine("..p.......|........basura......|.......idea.........| ");
+            terminal.PrintLine("..r.......|....................|....................|");
+            terminal.PrintLine("..o.......-------------------------------------------");
+            terminal.PrintLine("..d.......|....................|....................|");
+            terminal.PrintLine("..u....si.|........servicio....|......venta.........|");
+            terminal.PrintLine("..c.......|....................|.....estrategic.....|");
+            terminal.PrintLine("..........-------------------------------------------");
             terminal.PrintLine("");
-            terminal.PrintLine(" cliente");
-            terminal.PrintLine(" cliente siempre tiene la razon");
+            terminal.PrintLine(".cliente");
+            terminal.PrintLine(".cliente.siempre.tiene.la.razon");
             //Relacionarse con las personas
             terminal.WaitUserInput();
         }
