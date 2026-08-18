@@ -25,23 +25,33 @@ namespace GolemSharp
             realityCheck = new RealityCheck();
         }
 
-        private void HandleOption(int option)
-        {
-            switch (option)
-            {
-                case 1: prioritiesChecker.TakePriorities(); 
-                    break;
-                case 2: counter.CountToTen(); 
-                    break;
-                case 3: realityCheck.CoinToss(); 
-                    break;
-                case 4: boss.CheckBoss(); 
-                    break;
-            }
-        }
-
         private void HandleCommand(string command)
         {
+
+            // PRIORITIES/TASKS
+            if (command == "PRIORITIES" || command == "TASKS")
+            {
+                prioritiesChecker.TakePriorities();
+            }
+
+            // COUNT
+            if (command == "COUNT")
+            {
+                counter.CountToTen();
+            }
+
+            // CHECK
+            if (command == "CHECK")
+            {
+                realityCheck.CoinToss();
+            }
+
+            // BOSS TRACK
+            if (command == "BOSS")
+            {
+                boss.CheckBoss();
+            }
+
             // LOAD
             if (command == "LOAD")
             {
@@ -169,10 +179,6 @@ namespace GolemSharp
                 terminal.PrintLine("WHICH:");
 
                 string optTxt = terminal.ReadLine() ?? "";
-                int opt = 0;
-                int.TryParse(optTxt, out opt);
-                HandleOption(opt);
-
                 command = optTxt.ToUpper();
                 HandleCommand(command);
             }
