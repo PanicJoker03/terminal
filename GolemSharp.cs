@@ -45,6 +45,12 @@ namespace GolemSharp
             {
                 realityCheck.CoinToss();
             }
+            
+            // MONEY
+            if (command == "MONEY")
+            {
+                MakeMoney();
+            }
 
             // BOSS TRACK
             if (command == "BOSS")
@@ -118,6 +124,13 @@ namespace GolemSharp
             terminal.PrintLine("..jefe");
             terminal.PrintLine(".jefe.es.humano,.comunicación,.hacer.preguntar.no.hostigar.");
             //Relacionarse con las personas
+            terminal.WaitUserInput();
+        }
+
+        private void MakeMoney()
+        {
+            terminal.ClearConsole();
+            terminal.PrintLine("$$ EARN $5, 000 MXN $$");
             terminal.WaitUserInput();
         }
 
