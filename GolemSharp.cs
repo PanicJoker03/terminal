@@ -12,6 +12,7 @@ namespace GolemSharp
         private ConsoleTerminal terminal;
         private PrioritiesChecker prioritiesChecker;
         private Boss boss;
+        private Work work;
         private RealityCheck realityCheck;
         private Counter counter;
 
@@ -21,13 +22,13 @@ namespace GolemSharp
             terminal.TextColor = color;
             prioritiesChecker = new PrioritiesChecker(name);
             boss = new Boss();
+            work = new Work();
             counter = new Counter();
             realityCheck = new RealityCheck();
         }
 
         private void HandleCommand(string command)
         {
-
             // PRIORITIES/TASKS
             if (command == "PRIORITIES" || command == "TASKS")
             {
@@ -50,6 +51,18 @@ namespace GolemSharp
             if (command == "MONEY")
             {
                 MakeMoney();
+            }
+            
+            // SALES
+            if (command == "SALES")
+            {
+                DoSales();
+            }
+            
+            // WORK
+            if (command == "WORK")
+            {
+                work.CheckWork();
             }
 
             // BOSS TRACK
@@ -131,6 +144,13 @@ namespace GolemSharp
         {
             terminal.ClearConsole();
             terminal.PrintLine("$$ EARN $5, 000 MXN $$");
+            terminal.WaitUserInput();
+        }
+
+        private void DoSales()
+        {
+            terminal.ClearConsole();
+            terminal.PrintLine("LISTEN, CREATE NECESSITY");
             terminal.WaitUserInput();
         }
 
