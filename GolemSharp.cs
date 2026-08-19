@@ -176,7 +176,7 @@ namespace GolemSharp
             {
                 terminal.ClearConsole();
                 terminal.PrintLine($"GUEST {userName}");
-                terminal.PrintLine("WHICH:");
+                terminal.PrintLine("TYPE COMMAND:");
 
                 string optTxt = terminal.ReadLine() ?? "";
                 command = optTxt.ToUpper();

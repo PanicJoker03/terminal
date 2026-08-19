@@ -18,7 +18,7 @@ namespace GolemSharp.Modules
                 terminal.PrintLine(counter);
             }
 
-            terminal.PrintLine("PRESS ANY KEY TO EXIT PROGRAM...");
+            terminal.PrintLine("PRESS ANY KEY TO EXIT MODULE...");
             terminal.WaitUserInput();
         }
     }

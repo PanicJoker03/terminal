@@ -1,5 +1,6 @@
 namespace GolemSharp
 {
+    //TODO: document
     public class ConsoleTerminal
     {
         private static ConsoleTerminal? instance;
@@ -58,7 +59,7 @@ namespace GolemSharp
                 Console.Clear();
             }
         }
-
+        
         public string? ReadLine()
         {
             if (ReadLineAsyncHandler != null)

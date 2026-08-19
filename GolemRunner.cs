@@ -5,6 +5,7 @@ namespace GolemSharp
 {
     public class GolemRunner
     {
+        //TODO: Document
         private readonly IHubContext<TerminalHub> _hub;
         private readonly Channel<string> _input = Channel.CreateUnbounded<string>();
         private Task? _runningTask;

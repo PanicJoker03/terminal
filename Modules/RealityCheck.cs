@@ -16,7 +16,7 @@ namespace GolemSharp.Modules
             terminal.PrintLine("REALITY CHECK");
             terminal.PrintLine(reality);
 
-            terminal.PrintLine("PRESS ANY KEY TO FINALIZE PROGRAM...");
+            terminal.PrintLine("PRESS ANY KEY TO FINALIZE MODULE...");
             terminal.WaitUserInput();
         }
     }

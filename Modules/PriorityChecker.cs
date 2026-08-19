@@ -3,10 +3,8 @@ namespace GolemSharp.Modules
     public class PrioritiesChecker
     {        
         private ConsoleTerminal terminal;
-        private string? name;
         public PrioritiesChecker(string? name)
         {
-            this.name = name;
             terminal = ConsoleTerminal.GetInstance();
         }
         public void TakePriorities()
@@ -18,7 +16,7 @@ namespace GolemSharp.Modules
             terminal.ClearConsole();
 
             terminal.PrintLine($"----------------------------");
-            terminal.PrintLine($"    {name}V.11.0.6");
+            terminal.PrintLine($"       TODAY TASKS          ");
             terminal.PrintLine($"----------------------------");
 
             terminal.PrintLine("WHAT'S THE PRIORITY A TODAY:");
@@ -68,7 +66,7 @@ namespace GolemSharp.Modules
                 }
             }
 
-            terminal.PrintLine("PRESS ANY KEY TO FINALIZE PROGRAM...");
+            terminal.PrintLine("PRESS ANY KEY TO FINALIZE MODULE...");
             terminal.WaitUserInput();
         }
 
