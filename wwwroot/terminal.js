@@ -3,7 +3,7 @@ const inputEl = document.getElementById('input');
 const sendBtn = document.getElementById('send');
 
 const connection = new signalR.HubConnectionBuilder()
-  .withUrl('/terminalHub')
+  .withUrl('/terminal/terminalHub')
   .withAutomaticReconnect()
   .build();
 
