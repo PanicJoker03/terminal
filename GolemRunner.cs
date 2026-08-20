@@ -52,7 +52,7 @@ namespace GolemSharp
 
                 _runningTask = Task.Run(() =>
                 {
-                    var golem = new GolemSharp("Aegis Hyper", ConsoleColor.Yellow);
+                    var golem = new GolemSharp("MAYAN CONSULTING", ConsoleColor.Yellow);
                     golem.Run();
                 });
             }

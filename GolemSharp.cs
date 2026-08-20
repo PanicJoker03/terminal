@@ -29,69 +29,73 @@ namespace GolemSharp
 
         private void HandleCommand(string command)
         {
-            // PRIORITIES/TASKS
-            if (command == "PRIORITIES" || command == "TASKS")
+            switch (command)
             {
-                prioritiesChecker.TakePriorities();
-            }
+                // PRIORITIES/TASKS
+                case "PRIORITIES":
+                case "TASKS":
+                    prioritiesChecker.TakePriorities();
+                    break;
 
-            // COUNT
-            if (command == "COUNT")
-            {
-                counter.CountToTen();
-            }
+                // COUNT
+                case "COUNT":
+                    counter.CountToTen();
+                    break;
 
-            // CHECK
-            if (command == "CHECK")
-            {
-                realityCheck.CoinToss();
-            }
-            
-            // MONEY
-            if (command == "MONEY")
-            {
-                MakeMoney();
-            }
-            
-            // SALES
-            if (command == "SALES")
-            {
-                DoSales();
-            }
-            
-            // WORK
-            if (command == "WORK")
-            {
-                work.CheckWork();
-            }
+                // CHECK
+                case "CHECK":
+                    realityCheck.CoinToss();
+                    break;
 
-            // BOSS TRACK
-            if (command == "BOSS")
-            {
-                boss.CheckBoss();
-            }
+                // MONEY
+                case "MONEY":
+                    MakeMoney();
+                    break;
 
-            // LOAD
-            if (command == "LOAD")
-            {
-                LoadPriorities();
-            }
+                // SALES
+                case "SALES":
+                    DoSales();
+                    break;
 
-            // LOOKUP
-            if (command == "CHART")
-            {
-                PrintBossChart();
-            }
+                // WORK
+                case "WORK":
+                    work.CheckWork();
+                    break;
 
-            if (command == "CLIENT")
-            {
-                PrintClientChart();
-            }
+                // BOSS TRACK
+                case "BOSS":
+                    boss.CheckBoss();
+                    break;
 
-            // LOOKUP
-            if (command == "LOOKUP")
-            {
-                DoLookUp();
+                // LOAD
+                case "LOAD":
+                    LoadPriorities();
+                    break;
+
+                // LOOKUP / CHARTS
+                case "CHART":
+                    PrintBossChart();
+                    break;
+
+                case "CLIENT":
+                    PrintClientChart();
+                    break;
+                
+                case "CLIENTS":
+                    PrintClients();
+                    break;
+
+                case "LOOKUP":
+                    DoLookUp();
+                    break;
+                
+                case "ORDER":
+                    DoOrder();
+                    break;
+                
+                default:
+                    DoNotUnderstand(command);
+                    break;
             }
         }
 
@@ -151,6 +155,29 @@ namespace GolemSharp
         {
             terminal.ClearConsole();
             terminal.PrintLine("LISTEN, CREATE NECESSITY");
+            terminal.WaitUserInput();
+        }
+
+        private void DoOrder()
+        {
+            //todo: order something, a sort maybe
+            terminal.ClearConsole();
+            terminal.PrintLine($"WHERE?");
+            terminal.WaitUserInput();
+        }
+        
+        private void PrintClients()
+        {
+            //todo: order something, a sort maybe
+            terminal.ClearConsole();
+            terminal.PrintLine($"WHO ARE YOUR CLIENTS?");
+            terminal.WaitUserInput();
+        }
+        
+        private void DoNotUnderstand(String command)
+        {
+            terminal.ClearConsole();
+            terminal.PrintLine($"I DO NOT UNDERSTAND {command.ToUpper()}...");
             terminal.WaitUserInput();
         }
 
