@@ -107,7 +107,8 @@ namespace GolemSharp
 
             try
             {
-                string filePath = Path.Combine(AppContext.BaseDirectory, $"OUT_{dayToLoad}.txt");
+                string dataDirectory = "/var/lib/golem-sharp";
+                string filePath = Path.Combine(dataDirectory, $"OUT_{dayToLoad}.txt");
                 string content = File.ReadAllText(filePath);
 
                 terminal.ClearConsole();
@@ -187,8 +188,9 @@ namespace GolemSharp
 
             try
             {
-                string exeDirectory = AppContext.BaseDirectory;
-                var records = Directory.GetFiles(exeDirectory, "OUT_*.txt");
+                //string exeDirectory = AppContext.BaseDirectory;
+                string dataDirectory = "/var/lib/golem-sharp";
+                var records = Directory.GetFiles(dataDirectory, "OUT_*.txt");
 
                 foreach (var record in records)
                 {
