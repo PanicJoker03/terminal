@@ -11,6 +11,7 @@ namespace GolemSharp
 
         private ConsoleTerminal terminal;
         private PrioritiesChecker prioritiesChecker;
+        private JobApplicationTracker jobApplicationTracker;
         private Boss boss;
         private Work work;
         private RealityCheck realityCheck;
@@ -21,6 +22,7 @@ namespace GolemSharp
             terminal = ConsoleTerminal.GetInstance();
             terminal.TextColor = color;
             prioritiesChecker = new PrioritiesChecker(name);
+            jobApplicationTracker = new JobApplicationTracker(name);
             boss = new Boss();
             work = new Work();
             counter = new Counter();
@@ -36,7 +38,12 @@ namespace GolemSharp
                 case "TASKS":
                     prioritiesChecker.TakePriorities();
                     break;
-
+                
+                // JOB APPLICATIONS
+                case "JOBS":
+                    jobApplicationTracker.ManageApplications();
+                    break;
+                
                 // COUNT
                 case "COUNT":
                     counter.CountToTen();
