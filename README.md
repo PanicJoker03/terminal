@@ -1,5 +1,5 @@
-# GOLEM
-GOLEMSharp is a program that helps me to resolve my daily work duties
+# Terminal
+Terminal is a program that helps me to resolve my daily work duties
 
 ## Features
 
@@ -14,4 +14,15 @@ GOLEMSharp is a program that helps me to resolve my daily work duties
 
 * convert it a web app 
 
+### DISCLAIMER
 ⚠️ USE AT YOUR OWN RISK ⚠️
+
+#### Author Words
+
+At my current situation, I find that landing a Job is
+a task that I qualify as: awful, frustrating and humilliating (interviewed by AI).
+
+Opportunities that never occur hurt my hope and feelings.
+
+This software is what Homer S. will say at that chapter
+"Darle un golpe en la cara a Dios".
