@@ -9,66 +9,91 @@ namespace GolemSharp.Modules
         }
         public void TakePriorities()
         {
-            string priorityA = "";
-            string priorityB = "";
-            string priorityC = "";
+          string dataDirectory = "/var/lib/golem-sharp";
+            try{
+            Directory.CreateDirectory(dataDirectory);
+            }catch{
+                 terminal.PrintLine($"ERROR");
+                 //terminal.PrintLine($"PATH: {outPath}");
+                 throw;
+            }
 
-            terminal.ClearConsole();
-
-            terminal.PrintLine($"----------------------------");
-            terminal.PrintLine($"       TODAY TASKS          ");
-            terminal.PrintLine($"----------------------------");
-
-            terminal.PrintLine("WHAT'S THE PRIORITY A TODAY:");
-            priorityA = (terminal.ReadLine() ?? "").ToUpper();
-
-            terminal.PrintLine("WHAT'S THE PRIORITY B TODAY:");
-            priorityB = (terminal.ReadLine() ?? "").ToUpper();
-
-            terminal.PrintLine("WHAT'S THE PRIORITY C TODAY:");
-            priorityC = (terminal.ReadLine() ?? "").ToUpper();
 
             string todaySign = DateTime.Now.ToString("ddMMyyyy");
 
-            terminal.PrintLine($"OK: {priorityA}");
-            terminal.PrintLine($"OK: {priorityB}");
-            terminal.PrintLine($"OK: {priorityC}");
-
-            string exeDirectory = AppContext.BaseDirectory;
-
-            string outPath = Path.Combine(exeDirectory, $"OUT_{todaySign}.txt");
-
-            using (var writer = new StreamWriter(outPath, false))
+            string outPath = Path.Combine(
+                dataDirectory,
+                $"OUT_{todaySign}.txt"
+            );
+            try
             {
-                writer.WriteLine($"{todaySign} PRIORITY A IS: {priorityA}");
-                writer.WriteLine($"{todaySign} PRIORITY B IS: {priorityB}");
-                writer.WriteLine($"{todaySign} PRIORITY C IS: {priorityC}");
+                string priorityA = "";
+                string priorityB = "";
+                string priorityC = "";
 
-                while (true)
+                terminal.ClearConsole();
+
+                terminal.PrintLine($"----------------------------");
+                terminal.PrintLine($"       TODAY TASKS          ");
+                terminal.PrintLine($"----------------------------");
+
+                terminal.PrintLine("WHAT'S THE PRIORITY A TODAY:");
+                priorityA = (terminal.ReadLine() ?? "").ToUpper();
+
+                terminal.PrintLine("WHAT'S THE PRIORITY B TODAY:");
+                priorityB = (terminal.ReadLine() ?? "").ToUpper();
+
+                terminal.PrintLine("WHAT'S THE PRIORITY C TODAY:");
+                priorityC = (terminal.ReadLine() ?? "").ToUpper();
+
+                terminal.PrintLine($"OK: {priorityA}");
+                terminal.PrintLine($"OK: {priorityB}");
+                terminal.PrintLine($"OK: {priorityC}");
+
+                //string exeDirectory = AppContext.BaseDirectory;
+
+                //string outPath = Path.Combine(exeDirectory, $"OUT_{todaySign}.txt");
+
+
+
+                using (var writer = new StreamWriter(outPath, false))
                 {
-                    terminal.PrintLine("ANOTHER TASK TODAY OR NOW (YES/NO):");
-                    string anotherTask = (terminal.ReadLine() ?? "").ToUpper();
+                    writer.WriteLine($"{todaySign} PRIORITY A IS: {priorityA}");
+                    writer.WriteLine($"{todaySign} PRIORITY B IS: {priorityB}");
+                    writer.WriteLine($"{todaySign} PRIORITY C IS: {priorityC}");
 
-                    if (anotherTask == "Y" || anotherTask == "YES")
+                    while (true)
                     {
-                        terminal.PrintLine("WHICH:");
-                        string which = (terminal.ReadLine() ?? "").ToUpper();
-                        writer.WriteLine($"ANOTHER TASK IS: {which}");
-                    }
-                    else if (anotherTask == "N" || anotherTask == "NO")
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        terminal.PrintLine("I DO NOT UNDERSTAND THAT");
+                        terminal.PrintLine("ANOTHER TASK TODAY OR NOW (YES/NO):");
+                        string anotherTask = (terminal.ReadLine() ?? "").ToUpper();
+
+                        if (anotherTask == "Y" || anotherTask == "YES")
+                        {
+                            terminal.PrintLine("WHICH:");
+                            string which = (terminal.ReadLine() ?? "").ToUpper();
+                            writer.WriteLine($"ANOTHER TASK IS: {which}");
+                        }
+                        else if (anotherTask == "N" || anotherTask == "NO")
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            terminal.PrintLine("I DO NOT UNDERSTAND THAT");
+                        }
                     }
                 }
+
+                terminal.PrintLine("PRESS ANY KEY TO FINALIZE MODULE...");
+                terminal.WaitUserInput();
+
             }
-
-            terminal.PrintLine("PRESS ANY KEY TO FINALIZE MODULE...");
-            terminal.WaitUserInput();
+            catch(Exception ex)
+             {
+                 terminal.PrintLine($"ERROR WRITING FILE: {ex.Message}");
+                 terminal.PrintLine($"PATH: {outPath}");
+                 throw;
+             }
         }
-
     }
 }
