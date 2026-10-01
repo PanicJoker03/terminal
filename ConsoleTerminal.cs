@@ -1,4 +1,4 @@
-namespace GolemSharp
+namespace TerminalSharp
 {
     //TODO: document
     public class ConsoleTerminal

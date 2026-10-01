@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using GolemSharp;
+using TerminalSharp;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR();
-builder.Services.AddSingleton<GolemRunner>();
+builder.Services.AddSingleton<TerminalRunner>();
 
 var app = builder.Build();
 
@@ -19,7 +19,7 @@ app.UseStaticFiles();
 
 app.MapHub<TerminalHub>("/terminalHub");
 
-app.MapGet("/start", (GolemRunner runner) =>
+app.MapGet("/start", (TerminalRunner runner) =>
 {
     runner.Start();
     return Results.Ok();

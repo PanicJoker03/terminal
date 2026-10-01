@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.SignalR;
 
-namespace GolemSharp
+namespace TerminalSharp
 {
     public class TerminalHub : Hub
     {
-        private readonly GolemRunner _runner;
+        private readonly TerminalRunner _runner;
 
-        public TerminalHub(GolemRunner runner)
+        public TerminalHub(TerminalRunner runner)
         {
             _runner = runner;
         }

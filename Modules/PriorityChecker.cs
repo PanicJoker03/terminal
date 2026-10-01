@@ -1,4 +1,4 @@
-namespace GolemSharp.Modules
+namespace TerminalSharp.Modules
 {
     public class PrioritiesChecker
     {        
