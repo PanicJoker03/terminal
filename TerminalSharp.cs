@@ -1,11 +1,11 @@
-using GolemSharp.Modules;
+using TerminalSharp.Modules;
 
-namespace GolemSharp
+namespace TerminalSharp
 {
-    public class GolemSharp
+    public class TerminalSharp
     {
-        const string ACTIVATION_WORD = "EMETH";
-        const string SHUTDOWN_WORD = "METH";
+        const string ACTIVATION_WORD = "INIT";
+        const string SHUTDOWN_WORD = "EXIT";
         public string? name { get; private set; }
         private string userName = "";
 
@@ -17,7 +17,7 @@ namespace GolemSharp
         private RealityCheck realityCheck;
         private Counter counter;
 
-        public GolemSharp(string? name, ConsoleColor color){ 
+        public TerminalSharp(string? name, ConsoleColor color){ 
             this.name = name;
             terminal = ConsoleTerminal.GetInstance();
             terminal.TextColor = color;
@@ -99,7 +99,9 @@ namespace GolemSharp
                 case "ORDER":
                     DoOrder();
                     break;
-                
+                case SHUTDOWN_WORD:
+                    //just idle
+                    break;
                 default:
                     DoNotUnderstand(command);
                     break;
@@ -155,7 +157,7 @@ namespace GolemSharp
         private void MakeMoney()
         {
             terminal.ClearConsole();
-            terminal.PrintLine("$$ EARN $5, 000 MXN $$");
+            terminal.PrintLine("$$ EARN $100 MXN $$");
             terminal.WaitUserInput();
         }
 
@@ -261,7 +263,7 @@ namespace GolemSharp
             {
                 terminal.ClearConsole();
                 terminal.PrintLine($"HELLO {userName}");
-                terminal.PrintLine("SAY THE WORD TO ACTIVATE THE GOLEM:");
+                terminal.PrintLine("SAY THE WORD TO ACTIVATE:");
 
                 optTxt = terminal.ReadLine()?.ToUpper() ?? "";
 
@@ -278,6 +280,7 @@ namespace GolemSharp
 
         private void InitialGreet()
         {
+            terminal.ClearConsole();
             terminal.PrintLine($"{this.name?.ToUpper()}");
             terminal.PrintLine("TELL ME, WHAT'S YOUR NAME?");
             userName = (terminal.ReadLine() ?? "").ToUpper();
@@ -292,10 +295,13 @@ namespace GolemSharp
 
         public void Run()
         {
-            InitialGreet();
-            Guard();
-            Cycle();
-            DoShutDown();
+            while(true)
+            {
+                InitialGreet();
+                Guard();
+                Cycle();
+                DoShutDown();   
+            }
         }
     }
 }
