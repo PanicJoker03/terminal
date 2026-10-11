@@ -13,6 +13,11 @@ Terminal is a program that helps me to resolve my daily work duties
 ### TODO
 
 * convert it a web app 
+* update jobs status
+* download jobs csv
+* mock interview module
+* use blazor for frontend
+* license
 
 ### DISCLAIMER
 ⚠️ USE AT YOUR OWN RISK ⚠️
