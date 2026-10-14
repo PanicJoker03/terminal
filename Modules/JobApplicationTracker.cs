@@ -9,6 +9,8 @@ namespace TerminalSharp.Modules
         {
             terminal = ConsoleTerminal.GetInstance();
             csvPath = "/var/lib/golem-sharp/JOB_APPLICATIONS.csv";
+            //TESTS
+            //csvPath = "./JOB_APPLICATIONS.csv";
         }
 
         public void ManageApplications()
@@ -25,7 +27,7 @@ namespace TerminalSharp.Modules
                 terminal.PrintLine("----------------------------");
                 terminal.PrintLine("    JOB APPLICATIONS        ");
                 terminal.PrintLine("----------------------------");
-                terminal.PrintLine("ENTER ACTION (APPLY / LOAD / EXIT):");
+                terminal.PrintLine("ENTER ACTION (APPLY / LOAD / UPDATE / EXIT):");
 
                 string action = (terminal.ReadLine() ?? "").ToUpper().Trim();
 
@@ -37,6 +39,10 @@ namespace TerminalSharp.Modules
                 {
                     LoadJobs();
                 }
+                else if (action == "UPDATE" || action == "STATUS")
+                {
+                    UpdateJobStatus();
+                }
                 else if (action == "EXIT" || action == "QUIT")
                 {
                     terminal.PrintLine("MODULE FINALIZED.");
@@ -44,7 +50,7 @@ namespace TerminalSharp.Modules
                 }
                 else
                 {
-                    terminal.PrintLine("INVALID ACTION. USE APPLY, LOAD OR EXIT.");
+                    terminal.PrintLine("INVALID ACTION. USE APPLY, LOAD, UPDATE OR EXIT.");
                     terminal.PrintLine("PRESS ANY KEY TO CONTINUE...");
                     terminal.WaitUserInput();
                 }
@@ -94,6 +100,76 @@ namespace TerminalSharp.Modules
             terminal.WaitUserInput();
         }
 
+        private void UpdateJobStatus()
+        {
+            terminal.ClearConsole();
+            terminal.PrintLine("----------------------------");
+            terminal.PrintLine("   UPDATE JOB STATUS        ");
+            terminal.PrintLine("----------------------------");
+
+            if (!File.Exists(csvPath))
+            {
+                terminal.PrintLine("NO APPLICATIONS FOUND.");
+                terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+                terminal.WaitUserInput();
+                return;
+            }
+
+            string[] lines = File.ReadAllLines(csvPath);
+            if (lines.Length <= 1)
+            {
+                terminal.PrintLine("NO APPLICATIONS FOUND.");
+                terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+                terminal.WaitUserInput();
+                return;
+            }
+
+            terminal.PrintLine("SELECT A JOB BY NUMBER:");
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string[] row = ParseCsvLine(lines[i]);
+                if (row.Length < 6)
+                {
+                    continue;
+                }
+
+                terminal.PrintLine($"{i}. {row[1]} - {row[2]} [{row[3]}]");
+            }
+
+            terminal.PrintLine("JOB NUMBER:");
+            string? jobNumberInput = terminal.ReadLine();
+            if (!int.TryParse(jobNumberInput, out int selectedIndex) || selectedIndex < 1 || selectedIndex >= lines.Length)
+            {
+                terminal.PrintLine("INVALID JOB NUMBER.");
+                terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+                terminal.WaitUserInput();
+                return;
+            }
+
+            string[] currentRow = ParseCsvLine(lines[selectedIndex]);
+            terminal.PrintLine($"CURRENT STATUS: {currentRow[3]}");
+            terminal.PrintLine("NEW STATUS:");
+            string newStatus = (terminal.ReadLine() ?? "").Trim();
+            if (string.IsNullOrWhiteSpace(newStatus))
+            {
+                newStatus = currentRow[3];
+            }
+
+            try
+            {
+                string[] updatedLines = UpdateStatusLine(lines, selectedIndex, newStatus);
+                File.WriteAllLines(csvPath, updatedLines);
+                terminal.PrintLine("JOB STATUS UPDATED SUCCESSFULLY.");
+            }
+            catch (Exception ex)
+            {
+                terminal.PrintLine($"FAILED TO UPDATE JOB STATUS: {ex.Message}");
+            }
+
+            terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+            terminal.WaitUserInput();
+        }
+
         private void LoadJobs()
         {
             terminal.ClearConsole();
@@ -122,6 +198,81 @@ namespace TerminalSharp.Modules
 
             terminal.PrintLine("PRESS ANY KEY TO RETURN...");
             terminal.WaitUserInput();
+        }
+
+        public static string[] UpdateStatusLine(string[] lines, int rowIndex, string newStatus)
+        {
+            if (lines == null)
+            {
+                throw new ArgumentNullException(nameof(lines));
+            }
+
+            if (rowIndex < 0 || rowIndex >= lines.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rowIndex));
+            }
+
+            if (string.IsNullOrWhiteSpace(newStatus))
+            {
+                throw new ArgumentException("Status is required.", nameof(newStatus));
+            }
+
+            string[] updatedLines = (string[])lines.Clone();
+            string[] row = ParseCsvLineStatic(lines[rowIndex]);
+
+            if (row.Length < 4)
+            {
+                throw new InvalidOperationException("The selected CSV row is malformed.");
+            }
+
+            row[3] = newStatus.Trim();
+            updatedLines[rowIndex] = string.Join(",", row.Select(EscapeCsvStatic));
+            return updatedLines;
+        }
+
+        private static string[] ParseCsvLineStatic(string line)
+        {
+            var result = new List<string>();
+            bool inQuotes = false;
+            var sb = new System.Text.StringBuilder();
+
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+                if (c == '"')
+                {
+                    if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
+                    {
+                        sb.Append('"');
+                        i++;
+                    }
+                    else
+                    {
+                        inQuotes = !inQuotes;
+                    }
+                }
+                else if (c == ',' && !inQuotes)
+                {
+                    result.Add(sb.ToString());
+                    sb.Clear();
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+
+            result.Add(sb.ToString());
+            return result.ToArray();
+        }
+
+        private static string EscapeCsvStatic(string value)
+        {
+            if (value.Contains(",") || value.Contains("\"") || value.Contains("\n"))
+            {
+                return "\"" + value.Replace("\"", "\"\"") + "\"";
+            }
+            return value;
         }
 
         private string EscapeCsv(string value)

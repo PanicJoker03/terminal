@@ -10,6 +10,8 @@ namespace TerminalSharp.Modules
         public void TakePriorities()
         {
           string dataDirectory = "/var/lib/golem-sharp";
+          //TESTS
+          //string dataDirectory = "./tasks-data/";
             try{
             Directory.CreateDirectory(dataDirectory);
             }catch{

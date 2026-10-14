@@ -117,6 +117,8 @@ namespace TerminalSharp
             try
             {
                 string dataDirectory = "/var/lib/golem-sharp";
+                //TESTS
+                //string dataDirectory = "./tasks-data/";
                 string filePath = Path.Combine(dataDirectory, $"OUT_{dayToLoad}.txt");
                 string content = File.ReadAllText(filePath);
 

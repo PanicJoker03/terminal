@@ -8,4 +8,11 @@
     <RootNamespace>GolemSharp</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Tests/**/*.cs" />
+    <None Remove="Tests/**/*.cs" />
+    <Content Remove="Tests/**/*.cs" />
+    <EmbeddedResource Remove="Tests/**/*.cs" />
+  </ItemGroup>
+
 </Project>
