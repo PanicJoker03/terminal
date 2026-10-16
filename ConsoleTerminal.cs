@@ -1,18 +1,23 @@
 namespace TerminalSharp
 {
-    //TODO: document
     public class ConsoleTerminal
     {
         private static ConsoleTerminal? instance;
+        private static readonly AsyncLocal<IoHandlers?> CurrentHandlers = new();
         public ConsoleColor TextColor = ConsoleColor.White;
 
-        // Hooks for web integration. If set, these will be used instead of Console APIs.
-        public static Func<string, Task>? OutputHandler;
-        public static Func<Task<string?>>? ReadLineAsyncHandler;
-        public static Func<Task>? WaitUserInputAsyncHandler;
-        public static Func<Task>? ClearAsyncHandler;
-
         private ConsoleTerminal() { }
+
+        public static IDisposable UseWebIo(
+            Func<string, Task> output,
+            Func<Task<string?>> readLine,
+            Func<Task> waitForInput,
+            Func<Task> clear)
+        {
+            var previous = CurrentHandlers.Value;
+            CurrentHandlers.Value = new IoHandlers(output, readLine, waitForInput, clear);
+            return new IoScope(previous);
+        }
 
         public static ConsoleTerminal GetInstance()
         {
@@ -24,9 +29,10 @@ namespace TerminalSharp
         public void PrintLine(object line)
         {
             var text = $"> {line}";
-            if (OutputHandler != null)
+            var handlers = CurrentHandlers.Value;
+            if (handlers != null)
             {
-                OutputHandler(text).GetAwaiter().GetResult();
+                handlers.Output(text).GetAwaiter().GetResult();
             }
             else
             {
@@ -38,9 +44,10 @@ namespace TerminalSharp
 
         public void WaitUserInput()
         {
-            if (WaitUserInputAsyncHandler != null)
+            var handlers = CurrentHandlers.Value;
+            if (handlers != null)
             {
-                WaitUserInputAsyncHandler().GetAwaiter().GetResult();
+                handlers.WaitForInput().GetAwaiter().GetResult();
             }
             else
             {
@@ -50,9 +57,10 @@ namespace TerminalSharp
 
         public void ClearConsole()
         {
-            if (ClearAsyncHandler != null)
+            var handlers = CurrentHandlers.Value;
+            if (handlers != null)
             {
-                ClearAsyncHandler().GetAwaiter().GetResult();
+                handlers.Clear().GetAwaiter().GetResult();
             }
             else
             {
@@ -62,13 +70,28 @@ namespace TerminalSharp
         
         public string? ReadLine()
         {
-            if (ReadLineAsyncHandler != null)
+            var handlers = CurrentHandlers.Value;
+            if (handlers != null)
             {
-                return ReadLineAsyncHandler().GetAwaiter().GetResult();
+                return handlers.ReadLine().GetAwaiter().GetResult();
             }
             else
             {
                 return Console.ReadLine();
+            }
+        }
+
+        private sealed record IoHandlers(
+            Func<string, Task> Output,
+            Func<Task<string?>> ReadLine,
+            Func<Task> WaitForInput,
+            Func<Task> Clear);
+
+        private sealed class IoScope(IoHandlers? previous) : IDisposable
+        {
+            public void Dispose()
+            {
+                CurrentHandlers.Value = previous;
             }
         }
     }

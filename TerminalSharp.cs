@@ -116,9 +116,9 @@ namespace TerminalSharp
 
             try
             {
-                string dataDirectory = "/var/lib/golem-sharp";
+                //string dataDirectory = "/var/lib/golem-sharp";
                 //TESTS
-                //string dataDirectory = "./tasks-data/";
+                string dataDirectory = "./tasks-data/";
                 string filePath = Path.Combine(dataDirectory, $"OUT_{dayToLoad}.txt");
                 string content = File.ReadAllText(filePath);
 
@@ -199,8 +199,8 @@ namespace TerminalSharp
 
             try
             {
-                //string exeDirectory = AppContext.BaseDirectory;
-                string dataDirectory = "/var/lib/golem-sharp";
+                string dataDirectory = "./tasks-data";
+                //string dataDirectory = "/var/lib/golem-sharp";
                 var records = Directory.GetFiles(dataDirectory, "OUT_*.txt");
 
                 foreach (var record in records)

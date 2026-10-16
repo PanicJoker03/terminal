@@ -11,16 +11,23 @@ namespace TerminalSharp
             _runner = runner;
         }
 
-        public Task SendInput(string input)
+        public async Task<bool> JoinSession(string sessionId)
         {
-            _runner.EnqueueInput(input);
-            return Task.CompletedTask;
+            if (!_runner.TryGetSession(sessionId, out var session) || session is null)
+            {
+                return false;
+            }
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, session.Id);
+            return true;
         }
 
-        public Task StartSession()
+        public Task<bool> SendInput(string sessionId, string input)
         {
-            _runner.Start();
-            return Task.CompletedTask;
+            return Task.FromResult(
+                _runner.TryGetSession(sessionId, out var session)
+                && session is not null
+                && session.EnqueueInput(input));
         }
     }
 }
