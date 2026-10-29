@@ -25,62 +25,67 @@ namespace TerminalSharp.Modules
             {
                 terminal.ClearConsole();
                 terminal.PrintLine("----------------------------");
-                terminal.PrintLine("    JOB APPLICATIONS        ");
+                terminal.PrintLine("    job applications        ");
                 terminal.PrintLine("----------------------------");
-                terminal.PrintLine("ENTER ACTION (APPLY / LOAD / UPDATE / EXIT):");
+                terminal.PrintLine("enter action (apply / load / update / exit):");
 
-                string action = (terminal.ReadLine() ?? "").ToUpper().Trim();
+                string action = NormalizeAction(terminal.ReadLine());
 
-                if (action == "APPLY")
+                if (action == "apply")
                 {
                     ApplyJob();
                 }
-                else if (action == "LOAD")
+                else if (action == "load")
                 {
                     LoadJobs();
                 }
-                else if (action == "UPDATE" || action == "STATUS")
+                else if (action == "update" || action == "status")
                 {
                     UpdateJobStatus();
                 }
-                else if (action == "EXIT" || action == "QUIT")
+                else if (action == "exit" || action == "quit")
                 {
-                    terminal.PrintLine("MODULE FINALIZED.");
+                    terminal.PrintLine("module finalized.");
                     break;
                 }
                 else
                 {
-                    terminal.PrintLine("INVALID ACTION. USE APPLY, LOAD, UPDATE OR EXIT.");
-                    terminal.PrintLine("PRESS ANY KEY TO CONTINUE...");
+                    terminal.PrintLine("invalid action. use apply, load, update or exit.");
+                    terminal.PrintLine("press any key to continue...");
                     terminal.WaitUserInput();
                 }
             }
+        }
+
+        public static string NormalizeAction(string? action)
+        {
+            return (action ?? "").Trim().ToLowerInvariant();
         }
 
         private void ApplyJob()
         {
             terminal.ClearConsole();
             terminal.PrintLine("----------------------------");
-            terminal.PrintLine("   NEW JOB APPLICATION      ");
+            terminal.PrintLine("   new job application      ");
             terminal.PrintLine("----------------------------");
 
-            terminal.PrintLine("COMPANY:");
+            terminal.PrintLine("company:");
             string company = (terminal.ReadLine() ?? "").Trim();
 
-            terminal.PrintLine("ROLE:");
+            terminal.PrintLine("role:");
             string role = (terminal.ReadLine() ?? "").Trim();
 
-            terminal.PrintLine("STATUS (DEFAULT: SENT):");
+            terminal.PrintLine("status (default: sent):");
             string status = (terminal.ReadLine() ?? "").Trim();
             if (string.IsNullOrWhiteSpace(status))
             {
                 status = "SENT";
             }
 
-            terminal.PrintLine("PAYMENT:");
+            terminal.PrintLine("payment:");
             string payment = (terminal.ReadLine() ?? "").Trim();
 
-            terminal.PrintLine("ORIGIN:");
+            terminal.PrintLine("origin:");
             string origin = (terminal.ReadLine() ?? "").Trim();
 
             string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -95,8 +100,8 @@ namespace TerminalSharp.Modules
                 writer.WriteLine($"{timestamp},{EscapeCsv(company)},{EscapeCsv(role)},{EscapeCsv(status)},{EscapeCsv(payment)},{EscapeCsv(origin)}");
             }
 
-            terminal.PrintLine("APPLICATION SAVED SUCCESSFULLY.");
-            terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+            terminal.PrintLine("application saved successfully.");
+            terminal.PrintLine("press any key to return...");
             terminal.WaitUserInput();
         }
 
@@ -104,13 +109,13 @@ namespace TerminalSharp.Modules
         {
             terminal.ClearConsole();
             terminal.PrintLine("----------------------------");
-            terminal.PrintLine("   UPDATE JOB STATUS        ");
+            terminal.PrintLine("   update job status        ");
             terminal.PrintLine("----------------------------");
 
             if (!File.Exists(csvPath))
             {
-                terminal.PrintLine("NO APPLICATIONS FOUND.");
-                terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+                terminal.PrintLine("no applications found.");
+                terminal.PrintLine("press any key to return...");
                 terminal.WaitUserInput();
                 return;
             }
@@ -118,13 +123,13 @@ namespace TerminalSharp.Modules
             string[] lines = File.ReadAllLines(csvPath);
             if (lines.Length <= 1)
             {
-                terminal.PrintLine("NO APPLICATIONS FOUND.");
-                terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+                terminal.PrintLine("no applications found.");
+                terminal.PrintLine("press any key to return...");
                 terminal.WaitUserInput();
                 return;
             }
 
-            terminal.PrintLine("SELECT A JOB BY NUMBER:");
+            terminal.PrintLine("select a job by number:");
             for (int i = 1; i < lines.Length; i++)
             {
                 string[] row = ParseCsvLine(lines[i]);
@@ -136,19 +141,19 @@ namespace TerminalSharp.Modules
                 terminal.PrintLine($"{i}. {row[1]} - {row[2]} [{row[3]}]");
             }
 
-            terminal.PrintLine("JOB NUMBER:");
+            terminal.PrintLine("job number:");
             string? jobNumberInput = terminal.ReadLine();
             if (!int.TryParse(jobNumberInput, out int selectedIndex) || selectedIndex < 1 || selectedIndex >= lines.Length)
             {
-                terminal.PrintLine("INVALID JOB NUMBER.");
-                terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+                terminal.PrintLine("invalid job number.");
+                terminal.PrintLine("press any key to return...");
                 terminal.WaitUserInput();
                 return;
             }
 
             string[] currentRow = ParseCsvLine(lines[selectedIndex]);
-            terminal.PrintLine($"CURRENT STATUS: {currentRow[3]}");
-            terminal.PrintLine("NEW STATUS:");
+            terminal.PrintLine($"current status: {currentRow[3]}");
+            terminal.PrintLine("new status:");
             string newStatus = (terminal.ReadLine() ?? "").Trim();
             if (string.IsNullOrWhiteSpace(newStatus))
             {
@@ -159,14 +164,14 @@ namespace TerminalSharp.Modules
             {
                 string[] updatedLines = UpdateStatusLine(lines, selectedIndex, newStatus);
                 File.WriteAllLines(csvPath, updatedLines);
-                terminal.PrintLine("JOB STATUS UPDATED SUCCESSFULLY.");
+                terminal.PrintLine("job status updated successfully.");
             }
             catch (Exception ex)
             {
-                terminal.PrintLine($"FAILED TO UPDATE JOB STATUS: {ex.Message}");
+                terminal.PrintLine($"failed to update job status: {ex.Message}");
             }
 
-            terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+            terminal.PrintLine("press any key to return...");
             terminal.WaitUserInput();
         }
 
@@ -174,13 +179,13 @@ namespace TerminalSharp.Modules
         {
             terminal.ClearConsole();
             terminal.PrintLine("----------------------------");
-            terminal.PrintLine("   JOB APPLICATIONS LOG     ");
+            terminal.PrintLine("   job applications log     ");
             terminal.PrintLine("----------------------------");
 
             if (!File.Exists(csvPath))
             {
-                terminal.PrintLine("NO APPLICATIONS FOUND.");
-                terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+                terminal.PrintLine("no applications found.");
+                terminal.PrintLine("press any key to return...");
                 terminal.WaitUserInput();
                 return;
             }
@@ -188,15 +193,15 @@ namespace TerminalSharp.Modules
             string[] lines = File.ReadAllLines(csvPath);
             if (lines.Length == 0)
             {
-                terminal.PrintLine("FILE IS EMPTY.");
-                terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+                terminal.PrintLine("file is empty.");
+                terminal.PrintLine("press any key to return...");
                 terminal.WaitUserInput();
                 return;
             }
 
             PrintAsciiGrid(lines);
 
-            terminal.PrintLine("PRESS ANY KEY TO RETURN...");
+            terminal.PrintLine("press any key to return...");
             terminal.WaitUserInput();
         }
 

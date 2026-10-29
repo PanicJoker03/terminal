@@ -1,0 +1,36 @@
+body {
+    font-family: 'Space Mono', monospace;
+    background: #111;
+    color: #eee;
+}
+
+#output {
+    width: 100%;
+    height: 70vh;
+    box-sizing: border-box;
+    background: #000;
+    color: #0f0;
+    padding: 10px;
+    overflow: auto;
+    white-space: pre-wrap;
+}
+
+#input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.wrapper-input {
+    display: flex;
+}
+
+button {
+    padding: 8px;
+}
+
+#send {
+    background-color: #00adfd;
+    color: white;
+}

@@ -1,0 +1,40 @@
+@baseUrl = http://localhost:5000
+@sessionId = replace-with-created-session-id
+
+### Create a terminal session
+POST {{baseUrl}}/api/terminal-sessions
+Content-Type: application/json
+
+{
+  "name": "MAYAN CONSULTING"
+}
+
+### Get session status
+GET {{baseUrl}}/api/terminal-sessions/{{sessionId}}
+
+### Poll output events (advance `after` to the last returned sequence number)
+GET {{baseUrl}}/api/terminal-sessions/{{sessionId}}/events?after=0
+
+### Send terminal input
+POST {{baseUrl}}/api/terminal-sessions/{{sessionId}}/input
+Content-Type: application/json
+
+{
+  "text": "ANGULAR USER"
+}
+
+### Activate the terminal after entering a name
+POST {{baseUrl}}/api/terminal-sessions/{{sessionId}}/input
+Content-Type: application/json
+
+{
+  "text": "INIT"
+}
+
+### Connect for live updates with @microsoft/signalr
+# Hub URL: {{baseUrl}}/ws/terminal
+# Invoke JoinSession(sessionId), then listen for the terminalEvent event.
+# Invoke SendInput(sessionId, text) to submit a line over SignalR.
+
+### Delete and stop the session
+DELETE {{baseUrl}}/api/terminal-sessions/{{sessionId}}

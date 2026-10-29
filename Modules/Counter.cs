@@ -10,7 +10,7 @@ namespace TerminalSharp.Modules
         public void CountToTen()
         {
             terminal.ClearConsole();
-            terminal.PrintLine("COUNT TO TEN:");
+            terminal.PrintLine("count to ten:");
 
             for (int counter = 1; counter <= 10; counter++)
             {
@@ -18,7 +18,7 @@ namespace TerminalSharp.Modules
                 terminal.PrintLine(counter);
             }
 
-            terminal.PrintLine("PRESS ANY KEY TO EXIT MODULE...");
+            terminal.PrintLine("press any key to exit module...");
             terminal.WaitUserInput();
         }
     }

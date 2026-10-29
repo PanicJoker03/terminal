@@ -10,11 +10,11 @@ namespace TerminalSharp.Modules
         public void CheckBoss()
         {
             terminal.ClearConsole();
-            terminal.PrintLine("BOSS CHECK");
-            terminal.PrintLine("HOW'S THE BOSS?");
+            terminal.PrintLine("boss check");
+            terminal.PrintLine("how's the boss?");
             string bossStatus = (terminal.ReadLine() ?? "").ToUpper();
 
-            terminal.PrintLine($"BOSS STATUS: {bossStatus}");
+            terminal.PrintLine($"boss status: {bossStatus}");
             terminal.WaitUserInput();
         }
     }

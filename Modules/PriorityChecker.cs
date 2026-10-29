@@ -15,7 +15,7 @@ namespace TerminalSharp.Modules
             try{
             Directory.CreateDirectory(dataDirectory);
             }catch{
-                 terminal.PrintLine($"ERROR");
+                 terminal.PrintLine($"error");
                  //terminal.PrintLine($"PATH: {outPath}");
                  throw;
             }
@@ -36,21 +36,21 @@ namespace TerminalSharp.Modules
                 terminal.ClearConsole();
 
                 terminal.PrintLine($"----------------------------");
-                terminal.PrintLine($"       TODAY TASKS          ");
+                terminal.PrintLine($"       today tasks          ");
                 terminal.PrintLine($"----------------------------");
 
-                terminal.PrintLine("WHAT'S THE PRIORITY A TODAY:");
+                terminal.PrintLine("what's the priority a today:");
                 priorityA = (terminal.ReadLine() ?? "").ToUpper();
 
-                terminal.PrintLine("WHAT'S THE PRIORITY B TODAY:");
+                terminal.PrintLine("what's the priority b today:");
                 priorityB = (terminal.ReadLine() ?? "").ToUpper();
 
-                terminal.PrintLine("WHAT'S THE PRIORITY C TODAY:");
+                terminal.PrintLine("what's the priority c today:");
                 priorityC = (terminal.ReadLine() ?? "").ToUpper();
 
-                terminal.PrintLine($"OK: {priorityA}");
-                terminal.PrintLine($"OK: {priorityB}");
-                terminal.PrintLine($"OK: {priorityC}");
+                terminal.PrintLine($"ok: {priorityA}");
+                terminal.PrintLine($"ok: {priorityB}");
+                terminal.PrintLine($"ok: {priorityC}");
 
                 //string exeDirectory = AppContext.BaseDirectory;
 
@@ -66,34 +66,34 @@ namespace TerminalSharp.Modules
 
                     while (true)
                     {
-                        terminal.PrintLine("ANOTHER TASK TODAY OR NOW (YES/NO):");
-                        string anotherTask = (terminal.ReadLine() ?? "").ToUpper();
+                        terminal.PrintLine("another task today or now (yes/no):");
+                        string anotherTask = (terminal.ReadLine() ?? "").Trim().ToLowerInvariant();
 
-                        if (anotherTask == "Y" || anotherTask == "YES")
+                        if (anotherTask == "y" || anotherTask == "yes")
                         {
-                            terminal.PrintLine("WHICH:");
+                            terminal.PrintLine("which:");
                             string which = (terminal.ReadLine() ?? "").ToUpper();
-                            writer.WriteLine($"ANOTHER TASK IS: {which}");
+                            writer.WriteLine($"another task is: {which}");
                         }
-                        else if (anotherTask == "N" || anotherTask == "NO")
+                        else if (anotherTask == "n" || anotherTask == "no")
                         {
                             break;
                         }
                         else
                         {
-                            terminal.PrintLine("I DO NOT UNDERSTAND THAT");
+                            terminal.PrintLine("i do not understand that");
                         }
                     }
                 }
 
-                terminal.PrintLine("PRESS ANY KEY TO FINALIZE MODULE...");
+                terminal.PrintLine("press any key to finalize module...");
                 terminal.WaitUserInput();
 
             }
             catch(Exception ex)
              {
-                 terminal.PrintLine($"ERROR WRITING FILE: {ex.Message}");
-                 terminal.PrintLine($"PATH: {outPath}");
+                 terminal.PrintLine($"error writing file: {ex.Message}");
+                 terminal.PrintLine($"path: {outPath}");
                  throw;
              }
         }
