@@ -1,12 +1,11 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { TerminalShellComponent } from './components/terminal-shell/terminal-shell';
 
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
+  standalone: true,
+  imports: [TerminalShellComponent],
+  template: '<app-terminal-shell></app-terminal-shell>',
   styleUrl: './app.scss',
-  templateUrl: './app.html',
 })
-export class App {
-  protected readonly title = signal('terminal-front');
-}
+export class App {}

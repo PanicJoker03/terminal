@@ -1,0 +1,137 @@
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.terminal-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background: #000000;
+  color: #d8ffe6;
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+  border: 1px solid rgba(146, 255, 185, 0.28);
+  box-shadow: inset 0 0 32px rgba(18, 255, 120, 0.06);
+}
+
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 42px;
+  padding: 0.75rem 1rem;
+  background: rgba(24, 28, 26, 0.9);
+  border-bottom: 1px solid rgba(146, 255, 185, 0.2);
+}
+
+.traffic-lights {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.traffic-light {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.traffic-light.red { background: #ff5f57; }
+.traffic-light.yellow { background: #ffbd2f; }
+.traffic-light.green { background: #28c840; }
+
+.terminal-title {
+  color: rgba(216, 255, 230, 0.78);
+  letter-spacing: 0.18rem;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+.terminal-output {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem 1.2rem 0.8rem;
+  background: #000000;
+  color: #d8ffe6;
+}
+
+.terminal-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 0.1rem 0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.line-prefix {
+  width: 0.75rem;
+  color: rgba(164, 255, 196, 0.7);
+  flex-shrink: 0;
+}
+
+.line-command {
+  color: #b3ffd4;
+}
+
+.line-error {
+  color: #ff8b8b;
+}
+
+.line-system {
+  color: #8fe8ff;
+}
+
+.line-output {
+  color: #d8ffe6;
+}
+
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-top: 1px solid rgba(146, 255, 185, 0.2);
+  background: rgba(7, 18, 10, 0.9);
+  padding: 0.9rem 1rem 1rem;
+  min-height: 72px;
+}
+
+.prompt {
+  color: #7ef5a5;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f4fff8;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.terminal-input::placeholder {
+  color: rgba(193, 255, 210, 0.45);
+}
+
+@media (max-width: 640px) {
+  .terminal-bar {
+    padding-inline: 0.75rem;
+  }
+
+  .terminal-output {
+    padding-inline: 0.75rem;
+  }
+
+  .terminal-input-row {
+    padding-inline: 0.75rem;
+  }
+}
