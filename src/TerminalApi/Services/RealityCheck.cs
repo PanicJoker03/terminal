@@ -1,6 +1,6 @@
-namespace TerminalApi.Modules
+namespace TerminalApi.Services
 {
-    public class RealityCheck
+    public class RealityCheck : IRealityCheck
     {        
         private ConsoleTerminal terminal;
         public RealityCheck()

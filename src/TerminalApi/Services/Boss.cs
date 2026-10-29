@@ -1,6 +1,6 @@
-namespace TerminalApi.Modules
+namespace TerminalApi.Services
 {
-    public class Boss
+    public class Boss : IBoss
     {        
         private ConsoleTerminal terminal;
         public Boss()

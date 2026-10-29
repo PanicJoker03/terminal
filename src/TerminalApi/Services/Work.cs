@@ -1,6 +1,6 @@
-namespace TerminalApi.Modules
+namespace TerminalApi.Services
 {
-    public class Work
+    public class Work : IWork
     {        
         private ConsoleTerminal terminal;
         public Work()

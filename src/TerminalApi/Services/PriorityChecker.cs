@@ -1,9 +1,9 @@
-namespace TerminalApi.Modules
+namespace TerminalApi.Services
 {
-    public class PrioritiesChecker
+    public class PrioritiesChecker : IPrioritiesChecker
     {        
         private ConsoleTerminal terminal;
-        public PrioritiesChecker(string? name)
+        public PrioritiesChecker()
         {
             terminal = ConsoleTerminal.GetInstance();
         }

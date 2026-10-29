@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TerminalApi
 {
@@ -14,17 +15,19 @@ namespace TerminalApi
     public sealed class TerminalRunner : ITerminalSessionService
     {
         private readonly IHubContext<TerminalHub> _hub;
+        private readonly IServiceProvider _services;
         private readonly ConcurrentDictionary<string, TerminalSession> _sessions = new();
 
-        public TerminalRunner(IHubContext<TerminalHub> hub)
+        public TerminalRunner(IHubContext<TerminalHub> hub, IServiceProvider services)
         {
             _hub = hub;
+            _services = services;
         }
 
         public TerminalSession CreateSession(string? name)
         {
             string id = Guid.NewGuid().ToString("D");
-            var session = new TerminalSession(id, name, _hub);
+            var session = new TerminalSession(id, name, _hub, _services);
             if (!_sessions.TryAdd(id, session))
             {
                 throw new InvalidOperationException("Could not create a terminal session.");
@@ -69,6 +72,7 @@ namespace TerminalApi
     {
         private const int MaximumBufferedEvents = 1000;
         private readonly IHubContext<TerminalHub> _hub;
+        private readonly IServiceProvider _services;
         private readonly Channel<string> _input = Channel.CreateUnbounded<string>();
         private readonly CancellationTokenSource _cancellation = new();
         private readonly CancellationToken _cancellationToken;
@@ -77,11 +81,12 @@ namespace TerminalApi
         private Task? _runningTask;
         private long _nextSequence;
 
-        internal TerminalSession(string id, string? name, IHubContext<TerminalHub> hub)
+        internal TerminalSession(string id, string? name, IHubContext<TerminalHub> hub, IServiceProvider services)
         {
             Id = id;
             Name = string.IsNullOrWhiteSpace(name) ? "JOB ASSISTANT APP" : name.Trim();
             _hub = hub;
+            _services = services;
             _cancellationToken = _cancellation.Token;
         }
 
@@ -101,7 +106,10 @@ namespace TerminalApi
 
                 try
                 {
-                    new TerminalApi(Name, ConsoleColor.Yellow).Run();
+                    ActivatorUtilities.CreateInstance<TerminalApi>(
+                        _services,
+                        Name,
+                        ConsoleColor.Yellow).Run();
                 }
                 catch (OperationCanceledException) when (_cancellation.IsCancellationRequested)
                 {

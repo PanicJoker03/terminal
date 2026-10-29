@@ -20,7 +20,7 @@ export class TerminalShellComponent implements AfterViewChecked {
   protected readonly prompt = computed(() => 'guest@terminal:~$');
 
   ngOnInit(): void {
-    void this.terminalService.startSession('MAYAN CONSULTING');
+    void this.terminalService.startSession('job assistant app');
   }
 
   ngAfterViewChecked(): void {

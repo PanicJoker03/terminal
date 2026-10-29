@@ -21,7 +21,7 @@ describe('TerminalService', () => {
     vi.stubGlobal('fetch', fetchMock);
 
     const service = new TerminalService();
-    await service.startSession('MAYAN CONSULTING');
+    await service.startSession('job assistant app');
 
     expect(fetchMock).toHaveBeenCalledWith(
       'http://localhost:5000/api/terminal-sessions',
@@ -55,7 +55,7 @@ describe('TerminalService', () => {
     vi.stubGlobal('fetch', fetchMock);
 
     const service = new TerminalService();
-    await service.startSession('MAYAN CONSULTING');
+    await service.startSession('job assistant app');
     await service.sendCommand('ANGULAR USER');
 
     expect(fetchMock).toHaveBeenCalledWith(
@@ -83,7 +83,7 @@ describe('TerminalService', () => {
     expect(lines.some((line) => line.type === 'output' && line.text === 'clear')).toBe(false);
   });
 
-  it('enables blank Enter input when the backend prompts for a key press', async () => {
+  it('sends a raw <enter> to the backend when the line is empty', async () => {
     const fetchMock = vi.fn()
       .mockResolvedValueOnce({
         ok: true,
@@ -91,7 +91,7 @@ describe('TerminalService', () => {
       })
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ events: [{ sequence: 1, text: 'Press any key to exit module...' }] }),
+        json: async () => ({ events: [] }),
       })
       .mockResolvedValueOnce({
         ok: true,
@@ -101,9 +101,7 @@ describe('TerminalService', () => {
     vi.stubGlobal('fetch', fetchMock);
 
     const service = new TerminalService();
-    await service.startSession('MAYAN CONSULTING');
-
-    expect((service as any).allowEmptyInput).toBe(true);
+    await service.startSession('job assistant app');
 
     await service.sendCommand('');
 
@@ -111,7 +109,7 @@ describe('TerminalService', () => {
       'http://localhost:5000/api/terminal-sessions/session-prompt/input',
       expect.objectContaining({
         method: 'POST',
-        body: JSON.stringify({ text: '' }),
+        body: JSON.stringify({ text: '<enter>' }),
       }),
     );
   });

@@ -1,5 +1,6 @@
 ﻿using TerminalApi;
 using TerminalApi.Api;
+using TerminalApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,12 @@ builder.Services.AddSignalR();
 builder.Services.AddOpenApi();
 builder.Services.AddValidation();
 builder.Services.AddProblemDetails();
+builder.Services.AddTransient<IPrioritiesChecker, PrioritiesChecker>();
+builder.Services.AddTransient<IJobApplicationTracker, JobApplicationTracker>();
+builder.Services.AddTransient<IBoss, Boss>();
+builder.Services.AddTransient<IWork, Work>();
+builder.Services.AddTransient<IRealityCheck, RealityCheck>();
+builder.Services.AddTransient<ICounter, Counter>();
 builder.Services.AddCors(options =>
 {
     string[] allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()

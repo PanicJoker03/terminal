@@ -1,6 +1,6 @@
-namespace TerminalApi.Modules
+namespace TerminalApi.Services
 {
-    public class Counter
+    public class Counter : ICounter
     {        
         private ConsoleTerminal terminal;
         public Counter()

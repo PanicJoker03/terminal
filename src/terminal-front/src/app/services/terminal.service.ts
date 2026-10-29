@@ -41,9 +41,8 @@ export class TerminalService {
   private sessionId: string | null = null;
   private lastEventSequence = 0;
   private pollingHandle: ReturnType<typeof globalThis.setTimeout> | null = null;
-  private allowEmptyInput = false;
 
-  async startSession(name = 'MAYAN CONSULTING'): Promise<void> {
+  async startSession(name = 'job assistant app'): Promise<void> {
     if (this.sessionId) {
       this.addLine('system', `session already active: ${this.sessionId}`);
       return;
@@ -87,18 +86,10 @@ export class TerminalService {
 
     const raw = command;
 
-    if (raw.trim() === '' && !this.allowEmptyInput) {
-      return;
-    }
-
-    if (raw.trim() !== '') {
-      this.allowEmptyInput = false;
-    }
-
     this.addLine('command', `$ ${raw || ' '}`);
 
     if (!this.sessionId) {
-      await this.startSession('MAYAN CONSULTING');
+      await this.startSession('job assistant app');
     }
 
     if (!this.sessionId) {
@@ -106,7 +97,7 @@ export class TerminalService {
     }
 
     try {
-      await this.sendInput(raw);
+      await this.sendInput(raw === '' ? '<enter>' : raw);
       void this.pollEvents();
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -230,11 +221,6 @@ export class TerminalService {
 
     if (typeof source !== 'string') {
       return null;
-    }
-
-    const normalized = source.toLowerCase();
-    if (normalized.includes('press any key') || normalized.includes('press enter') || normalized.includes('continue')) {
-      this.allowEmptyInput = true;
     }
 
     return source;

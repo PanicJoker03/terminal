@@ -1,4 +1,4 @@
-using TerminalApi.Modules;
+using TerminalApi.Services;
 using Xunit;
 
 namespace TerminalApi.Tests;

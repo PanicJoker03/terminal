@@ -1,4 +1,4 @@
-using TerminalApi.Modules;
+using TerminalApi.Services;
 
 namespace TerminalApi
 {
@@ -10,23 +10,32 @@ namespace TerminalApi
         private string userName = "";
 
         private ConsoleTerminal terminal;
-        private PrioritiesChecker prioritiesChecker;
-        private JobApplicationTracker jobApplicationTracker;
-        private Boss boss;
-        private Work work;
-        private RealityCheck realityCheck;
-        private Counter counter;
+        private readonly IPrioritiesChecker prioritiesChecker;
+        private readonly IJobApplicationTracker jobApplicationTracker;
+        private readonly IBoss boss;
+        private readonly IWork work;
+        private readonly IRealityCheck realityCheck;
+        private readonly ICounter counter;
 
-        public TerminalApi(string? name, ConsoleColor color){ 
+        public TerminalApi(
+            string? name,
+            ConsoleColor color,
+            IPrioritiesChecker prioritiesChecker,
+            IJobApplicationTracker jobApplicationTracker,
+            IBoss boss,
+            IWork work,
+            IRealityCheck realityCheck,
+            ICounter counter)
+        {
             this.name = name;
             terminal = ConsoleTerminal.GetInstance();
             terminal.TextColor = color;
-            prioritiesChecker = new PrioritiesChecker(name);
-            jobApplicationTracker = new JobApplicationTracker(name);
-            boss = new Boss();
-            work = new Work();
-            counter = new Counter();
-            realityCheck = new RealityCheck();
+            this.prioritiesChecker = prioritiesChecker;
+            this.jobApplicationTracker = jobApplicationTracker;
+            this.boss = boss;
+            this.work = work;
+            this.counter = counter;
+            this.realityCheck = realityCheck;
         }
 
         private void HandleCommand(string command)

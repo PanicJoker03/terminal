@@ -1,11 +1,11 @@
-namespace TerminalApi.Modules
+namespace TerminalApi.Services
 {
-    public class JobApplicationTracker
+    public class JobApplicationTracker : IJobApplicationTracker
     {
         private ConsoleTerminal terminal;
         private readonly string csvPath;
 
-        public JobApplicationTracker(string? name)
+        public JobApplicationTracker()
         {
             terminal = ConsoleTerminal.GetInstance();
             csvPath = "/var/lib/golem-sharp/JOB_APPLICATIONS.csv";
