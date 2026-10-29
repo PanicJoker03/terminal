@@ -18,6 +18,14 @@ For live terminal output, connect with `@microsoft/signalr` to `/ws/terminal`, i
 
 In development, the OpenAPI document is available at `/openapi/v1.json`. Configure Angular origins using the `Cors:AllowedOrigins` setting; it defaults to `http://localhost:4200`.
 
+Task and priority files use the local `tasks` and `results` directories by default. The container overrides these paths to `/var/lib/terminal-app/tasks` and `/var/lib/terminal-app/results`.
+
+### Jobs database
+
+Job applications are stored in SQLite at `terminal.db` by default for local execution. The container sets `TERMINAL_SQLITE_PATH` to `/var/lib/terminal-app/terminal.db`; mount `/var/lib/terminal-app` as a persistent volume to retain data across container replacement. Set `TERMINAL_SQLITE_PATH` to override the location.
+
+The application no longer reads or writes the legacy jobs CSV. Seed the SQLite database directly from any separately retained backup.
+
 See [TerminalApi.http](TerminalApi.http) for example requests.
 
 ### TODO

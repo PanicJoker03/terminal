@@ -3,17 +3,18 @@ namespace TerminalApi.Services
     public class PrioritiesChecker : IPrioritiesChecker
     {        
         private ConsoleTerminal terminal;
-        public PrioritiesChecker()
+        private readonly string resultsDirectory;
+
+        public PrioritiesChecker(IConfiguration? configuration = null)
         {
             terminal = ConsoleTerminal.GetInstance();
+            string configuredDirectory = configuration?["FilePaths:Results"] ?? "results";
+            resultsDirectory = Path.GetFullPath(configuredDirectory, AppContext.BaseDirectory);
         }
         public void TakePriorities()
         {
-          string dataDirectory = "/var/lib/golem-sharp";
-          //TESTS
-          //string dataDirectory = "./tasks-data/";
             try{
-            Directory.CreateDirectory(dataDirectory);
+            Directory.CreateDirectory(resultsDirectory);
             }catch{
                  terminal.PrintLine($"error");
                  //terminal.PrintLine($"PATH: {outPath}");
@@ -24,7 +25,7 @@ namespace TerminalApi.Services
             string todaySign = DateTime.Now.ToString("ddMMyyyy");
 
             string outPath = Path.Combine(
-                dataDirectory,
+                resultsDirectory,
                 $"OUT_{todaySign}.txt"
             );
             try

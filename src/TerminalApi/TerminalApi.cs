@@ -16,6 +16,7 @@ namespace TerminalApi
         private readonly IWork work;
         private readonly IRealityCheck realityCheck;
         private readonly ICounter counter;
+        private readonly string tasksDirectory;
 
         public TerminalApi(
             string? name,
@@ -25,7 +26,8 @@ namespace TerminalApi
             IBoss boss,
             IWork work,
             IRealityCheck realityCheck,
-            ICounter counter)
+            ICounter counter,
+            IConfiguration configuration)
         {
             this.name = name;
             terminal = ConsoleTerminal.GetInstance();
@@ -36,6 +38,8 @@ namespace TerminalApi
             this.work = work;
             this.counter = counter;
             this.realityCheck = realityCheck;
+            string configuredResultsDirectory = configuration["FilePaths:Results"] ?? "results";
+            tasksDirectory = Path.GetFullPath(configuredResultsDirectory, AppContext.BaseDirectory);
         }
 
         private void HandleCommand(string command)
@@ -125,10 +129,7 @@ namespace TerminalApi
 
             try
             {
-                //string dataDirectory = "/var/lib/golem-sharp";
-                //TESTS
-                string dataDirectory = "./tasks-data/";
-                string filePath = Path.Combine(dataDirectory, $"OUT_{dayToLoad}.txt");
+                string filePath = Path.Combine(tasksDirectory, $"OUT_{dayToLoad}.txt");
                 string content = File.ReadAllText(filePath);
 
                 terminal.ClearConsole();
@@ -208,9 +209,7 @@ namespace TerminalApi
 
             try
             {
-                string dataDirectory = "./tasks-data";
-                //string dataDirectory = "/var/lib/golem-sharp";
-                var records = Directory.GetFiles(dataDirectory, "OUT_*.txt");
+                var records = Directory.GetFiles(tasksDirectory, "OUT_*.txt");
 
                 foreach (var record in records)
                 {

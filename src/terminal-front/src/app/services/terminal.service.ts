@@ -86,6 +86,11 @@ export class TerminalService {
 
     const raw = command;
 
+    if (raw.trim().toLowerCase() === 'clear') {
+      this.clearTerminal();
+      return;
+    }
+
     this.addLine('command', `$ ${raw || ' '}`);
 
     if (!this.sessionId) {
@@ -138,8 +143,7 @@ export class TerminalService {
   }
 
   private clearTerminal(): void {
-    this.linesSubject.next([{ type: 'system', text: 'terminal cleared' }]);
-    this.lastEventSequence = 0;
+    this.linesSubject.next([]);
   }
 
   private clearPolling(): void {
