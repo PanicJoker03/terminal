@@ -4,8 +4,8 @@ namespace TerminalSharp
 {
     public class TerminalSharp
     {
-        const string ACTIVATION_WORD = "INIT";
-        const string SHUTDOWN_WORD = "EXIT";
+        const string ACTIVATION_WORD = "init";
+        const string SHUTDOWN_WORD = "exit";
         public string? name { get; private set; }
         private string userName = "";
 
@@ -34,69 +34,69 @@ namespace TerminalSharp
             switch (command)
             {
                 // PRIORITIES/TASKS
-                case "PRIORITIES":
-                case "TASKS":
+                case "priorities":
+                case "tasks":
                     prioritiesChecker.TakePriorities();
                     break;
                 
                 // JOB APPLICATIONS
-                case "JOBS":
+                case "jobs":
                     jobApplicationTracker.ManageApplications();
                     break;
                 
                 // COUNT
-                case "COUNT":
+                case "count":
                     counter.CountToTen();
                     break;
 
                 // CHECK
-                case "CHECK":
+                case "check":
                     realityCheck.CoinToss();
                     break;
 
                 // MONEY
-                case "MONEY":
+                case "money":
                     MakeMoney();
                     break;
 
                 // SALES
-                case "SALES":
+                case "sales":
                     DoSales();
                     break;
 
                 // WORK
-                case "WORK":
+                case "work":
                     work.CheckWork();
                     break;
 
                 // BOSS TRACK
-                case "BOSS":
+                case "boss":
                     boss.CheckBoss();
                     break;
 
                 // LOAD
-                case "LOAD":
+                case "load":
                     LoadPriorities();
                     break;
 
                 // LOOKUP / CHARTS
-                case "CHART":
+                case "chart":
                     PrintBossChart();
                     break;
 
-                case "CLIENT":
+                case "client":
                     PrintClientChart();
                     break;
                 
-                case "CLIENTS":
+                case "clients":
                     PrintClients();
                     break;
 
-                case "LOOKUP":
+                case "lookup":
                     DoLookUp();
                     break;
                 
-                case "ORDER":
+                case "order":
                     DoOrder();
                     break;
                 case SHUTDOWN_WORD:
@@ -111,7 +111,7 @@ namespace TerminalSharp
         private void LoadPriorities()
         {
             terminal.ClearConsole();
-            terminal.PrintLine("DAY <<DDMMYYYY>>");
+            terminal.PrintLine("day <<ddmmyyyy>>");
             string dayToLoad = (terminal.ReadLine() ?? "").ToUpper();
 
             try
@@ -127,7 +127,7 @@ namespace TerminalSharp
             }
             catch
             {
-                terminal.PrintLine("NO RECORD FOUND");
+                terminal.PrintLine("no record found");
             }
 
             terminal.WaitUserInput();
@@ -137,8 +137,8 @@ namespace TerminalSharp
         {
             //intención, durar en un trabajo
             terminal.ClearConsole();
-            terminal.PrintLine(".Jefe.tiene.expectativas");
-            terminal.PrintLine("..............Necesidades.emp");
+            terminal.PrintLine(".jefe.tiene.expectativas");
+            terminal.PrintLine("..............necesidades.emp");
             terminal.PrintLine("..................no...................si");
             terminal.PrintLine("..........-------------------------------------------");
             terminal.PrintLine("......no..|....................|....................|");
@@ -159,14 +159,14 @@ namespace TerminalSharp
         private void MakeMoney()
         {
             terminal.ClearConsole();
-            terminal.PrintLine("$$ EARN $100 MXN $$");
+            terminal.PrintLine("$$ earn $100 mxn $$");
             terminal.WaitUserInput();
         }
 
         private void DoSales()
         {
             terminal.ClearConsole();
-            terminal.PrintLine("LISTEN, CREATE NECESSITY");
+            terminal.PrintLine("listen, create necessity");
             terminal.WaitUserInput();
         }
 
@@ -174,7 +174,7 @@ namespace TerminalSharp
         {
             //todo: order something, a sort maybe
             terminal.ClearConsole();
-            terminal.PrintLine($"WHERE?");
+            terminal.PrintLine($"where?");
             terminal.WaitUserInput();
         }
         
@@ -182,14 +182,14 @@ namespace TerminalSharp
         {
             //todo: order something, a sort maybe
             terminal.ClearConsole();
-            terminal.PrintLine($"WHO ARE YOUR CLIENTS?");
+            terminal.PrintLine($"who are your clients?");
             terminal.WaitUserInput();
         }
         
         private void DoNotUnderstand(String command)
         {
             terminal.ClearConsole();
-            terminal.PrintLine($"I DO NOT UNDERSTAND {command.ToUpper()}...");
+            terminal.PrintLine($"i do not understand {command}...");
             terminal.WaitUserInput();
         }
 
@@ -213,7 +213,7 @@ namespace TerminalSharp
             }
             catch
             {
-                terminal.PrintLine("ERROR READING FILES");
+                terminal.PrintLine("error reading files");
             }
 
             terminal.WaitUserInput();
@@ -223,8 +223,8 @@ namespace TerminalSharp
         {
             //intención, durar en un trabajo
             terminal.ClearConsole();
-            terminal.PrintLine(".Cliente.tiene.necesidades");
-            terminal.PrintLine("..............Necesidades cliente");
+            terminal.PrintLine(".cliente.tiene.necesidades");
+            terminal.PrintLine("..............necesidades cliente");
             terminal.PrintLine("..................no..................si");
             terminal.PrintLine("..........-------------------------------------------");
             terminal.PrintLine("......no..|....................|....................|");
@@ -248,11 +248,11 @@ namespace TerminalSharp
             while (command != SHUTDOWN_WORD)
             {
                 terminal.ClearConsole();
-                terminal.PrintLine($"GUEST {userName}");
-                terminal.PrintLine("TYPE COMMAND:");
+                terminal.PrintLine($"guest {userName}");
+                terminal.PrintLine("type command:");
 
                 string optTxt = terminal.ReadLine() ?? "";
-                command = optTxt.ToUpper();
+                command = optTxt.Trim().ToLowerInvariant();
                 HandleCommand(command);
             }
         }
@@ -264,17 +264,17 @@ namespace TerminalSharp
             while (optTxt != ACTIVATION_WORD)
             {
                 terminal.ClearConsole();
-                terminal.PrintLine($"HELLO {userName}");
-                terminal.PrintLine("SAY THE WORD TO ACTIVATE:");
+                terminal.PrintLine($"hello {userName}");
+                terminal.PrintLine("say the word to activate:");
 
-                optTxt = terminal.ReadLine()?.ToUpper() ?? "";
+                optTxt = terminal.ReadLine()?.Trim().ToLowerInvariant() ?? "";
 
                 if (optTxt == ACTIVATION_WORD)
                 {
                     return;
                 }
 
-                terminal.PrintLine("YOU SHALL NOT PASS!");
+                terminal.PrintLine("you shall not pass!");
                 terminal.WaitUserInput();
             }
         }
@@ -284,14 +284,14 @@ namespace TerminalSharp
         {
             terminal.ClearConsole();
             terminal.PrintLine($"{this.name?.ToUpper()}");
-            terminal.PrintLine("TELL ME, WHAT'S YOUR NAME?");
+            terminal.PrintLine("tell me, what's your name?");
             userName = (terminal.ReadLine() ?? "").ToUpper();
         }
 
         private void DoShutDown()
         {
             terminal.ClearConsole();
-            terminal.PrintLine("GOOD BYE...");
+            terminal.PrintLine("good bye...");
             terminal.WaitUserInput();
         }
 
