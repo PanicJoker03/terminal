@@ -27,7 +27,7 @@ public sealed record TerminalEventsResponse(IReadOnlyList<TerminalEventResponse>
 /// <summary>Text entered into a terminal session.</summary>
 public sealed record SendTerminalInputRequest
 {
-    /// <summary>The line of input to send. Empty strings are accepted as Enter.</summary>
+    /// <summary>The line of input to send. Empty strings and <c>&lt;enter&gt;</c> are accepted as Enter.</summary>
     [Required, MaxLength(4096)]
     public required string Text { get; init; }
 }

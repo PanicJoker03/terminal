@@ -80,7 +80,7 @@ namespace TerminalSharp
         internal TerminalSession(string id, string? name, IHubContext<TerminalHub> hub)
         {
             Id = id;
-            Name = string.IsNullOrWhiteSpace(name) ? "MAYAN CONSULTING" : name.Trim();
+            Name = string.IsNullOrWhiteSpace(name) ? "JOB ASSISTANT APP" : name.Trim();
             _hub = hub;
             _cancellationToken = _cancellation.Token;
         }
@@ -118,7 +118,14 @@ namespace TerminalSharp
 
         public bool EnqueueInput(string? value)
         {
-            return IsRunning && _input.Writer.TryWrite(value ?? string.Empty);
+            return IsRunning && _input.Writer.TryWrite(NormalizeInput(value));
+        }
+
+        public static string NormalizeInput(string? value)
+        {
+            return string.Equals(value?.Trim(), "<enter>", StringComparison.OrdinalIgnoreCase)
+                ? string.Empty
+                : value ?? string.Empty;
         }
 
         public IReadOnlyList<TerminalEvent> GetEventsAfter(long sequence)

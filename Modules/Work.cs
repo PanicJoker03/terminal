@@ -11,11 +11,11 @@ namespace TerminalSharp.Modules
         public void CheckWork()
         {
             terminal.ClearConsole();
-            terminal.PrintLine("WORK CHECK");
-            terminal.PrintLine("HOW'S THE WORK?");
+            terminal.PrintLine("work check");
+            terminal.PrintLine("how's the work?");
             string WorkStatus = (terminal.ReadLine() ?? "").ToUpper();
 
-            terminal.PrintLine($"WORK STATUS: {WorkStatus}");
+            terminal.PrintLine($"work status: {WorkStatus}");
             terminal.WaitUserInput();
         }
     }

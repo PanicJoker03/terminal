@@ -28,7 +28,7 @@ namespace TerminalSharp
 
         public void PrintLine(object line)
         {
-            var text = $"> {line}";
+            var text = $"> {line}".ToLowerInvariant();
             var handlers = CurrentHandlers.Value;
             if (handlers != null)
             {
