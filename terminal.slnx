@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/GOLEMSharp/">
+    <Project Path="src/GOLEMSharp/TerminalSharp.csproj" />
+  </Folder>
+</Solution>
