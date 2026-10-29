@@ -13,12 +13,14 @@ namespace TerminalApi.Services
         }
         public void TakePriorities()
         {
-            try{
-            Directory.CreateDirectory(resultsDirectory);
-            }catch{
-                 terminal.PrintLine($"error");
-                 //terminal.PrintLine($"PATH: {outPath}");
-                 throw;
+            try
+            {
+                Directory.CreateDirectory(resultsDirectory);
+            }
+            catch (Exception ex) when (IsFileSystemException(ex))
+            {
+                ReportFileSystemError("creating results directory", resultsDirectory, ex);
+                throw;
             }
 
 
@@ -91,12 +93,40 @@ namespace TerminalApi.Services
                 terminal.WaitUserInput();
 
             }
-            catch(Exception ex)
-             {
-                 terminal.PrintLine($"error writing file: {ex.Message}");
-                 terminal.PrintLine($"path: {outPath}");
-                 throw;
-             }
+            catch (Exception ex) when (IsFileSystemException(ex))
+            {
+                ReportFileSystemError("writing results file", outPath, ex);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                terminal.PrintLine($"error: unexpected failure while running priorities ({ex.GetType().Name}): {ex.Message}");
+                throw;
+            }
+        }
+
+        private static bool IsFileSystemException(Exception ex) =>
+            ex is UnauthorizedAccessException or IOException or NotSupportedException or ArgumentException or System.Security.SecurityException;
+
+        private void ReportFileSystemError(string action, string path, Exception ex)
+        {
+            string reason = ex switch
+            {
+                UnauthorizedAccessException => "permission denied (the service user cannot write to this location)",
+                DirectoryNotFoundException => "a parent directory does not exist",
+                PathTooLongException => "the path is too long",
+                FileNotFoundException => "file not found",
+                IOException io when io.Message.Contains("No space left", StringComparison.OrdinalIgnoreCase) => "disk is full",
+                IOException io when io.Message.Contains("Read-only file system", StringComparison.OrdinalIgnoreCase) => "file system is read-only",
+                IOException => "I/O error",
+                NotSupportedException or ArgumentException => "invalid path",
+                _ => "file system error"
+            };
+
+            terminal.PrintLine($"error {action}: {reason}");
+            terminal.PrintLine($"path: {path}");
+            terminal.PrintLine($"user: {Environment.UserName}");
+            terminal.PrintLine($"details: {ex.GetType().Name}: {ex.Message}");
         }
     }
 }

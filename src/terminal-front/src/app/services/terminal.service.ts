@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export type TerminalLineType = 'system' | 'command' | 'output' | 'error';
 
@@ -37,7 +38,7 @@ export class TerminalService {
 
   readonly lines$: Observable<TerminalLine[]> = this.linesSubject.asObservable();
 
-  private readonly baseUrl = 'http://localhost:5000';
+  private readonly baseUrl = environment.apiBaseUrl.replace(/\/+$/, '');
   private sessionId: string | null = null;
   private lastEventSequence = 0;
   private pollingHandle: ReturnType<typeof globalThis.setTimeout> | null = null;

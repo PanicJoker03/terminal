@@ -1,6 +1,7 @@
 ﻿using TerminalApi;
 using TerminalApi.Api;
 using TerminalApi.Services;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,6 +54,10 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.Migrate();
 }
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost,
+});
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 app.UseCors();
@@ -61,6 +66,11 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+string assemblyHash = Convert.ToHexString(
+    System.Security.Cryptography.SHA256.HashData(File.ReadAllBytes(typeof(Program).Assembly.Location))).ToLowerInvariant();
+DateTimeOffset startedAt = DateTimeOffset.UtcNow;
+app.MapGet("/api/version", () => Results.Ok(new { sha256 = assemblyHash, startedAt }));
 
 app.MapHub<TerminalHub>("/ws/terminal");
 app.MapTerminalSessionEndpoints();

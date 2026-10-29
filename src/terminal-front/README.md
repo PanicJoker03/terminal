@@ -57,3 +57,14 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Environments
+
+The backend base URL comes from `src/environments/`:
+
+| File | Used by | `apiBaseUrl` |
+|---|---|---|
+| `environment.ts` | `ng serve`, `ng test`, development builds | `http://localhost:5000` |
+| `environment.prod.ts` | `ng build --configuration production` (swapped in via `fileReplacements`) | `https://aegis-hyper/terminal-api` |
+
+The backend must allow the site's origin through CORS, and the web server on `aegis-hyper` must proxy `/terminal-api/` to the API.
