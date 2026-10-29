@@ -17,6 +17,10 @@ export class TerminalShellComponent {
   protected readonly command = signal('');
   protected readonly prompt = computed(() => 'guest@terminal:~$');
 
+  ngOnInit(): void {
+    void this.terminalService.startSession('MAYAN CONSULTING');
+  }
+
   protected submitCommand(): void {
     const text = this.command().trim();
 
@@ -24,7 +28,7 @@ export class TerminalShellComponent {
       return;
     }
 
-    this.terminalService.sendCommand(text);
+    void this.terminalService.sendCommand(text);
     this.command.set('');
   }
 }
