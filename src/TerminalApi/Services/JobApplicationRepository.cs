@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using TerminalApi.Data;
+using TerminalApi.Domain.Entities;
 
 namespace TerminalApi.Services;
 

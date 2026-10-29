@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table';
 import { TerminalService } from '../../services/terminal.service';
 
 @Component({
   selector: 'app-terminal-shell',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatTableModule],
   templateUrl: './terminal-shell.html',
   styleUrl: './terminal-shell.scss',
 })
@@ -18,6 +19,12 @@ export class TerminalShellComponent implements AfterViewChecked {
   protected readonly terminalLines = this.terminalService.lines$;
   protected readonly command = signal('');
   protected readonly prompt = computed(() => 'guest@terminal:~$');
+  protected readonly displayedColumns = ['company', 'role', 'status'];
+  protected readonly jobRows = [
+    { company: 'Acme Labs', role: 'Frontend Engineer', status: 'SENT' },
+    { company: 'Northstar', role: 'Platform Engineer', status: 'INTERVIEW' },
+    { company: 'Verve', role: 'Product Engineer', status: 'REPLIED' },
+  ];
 
   ngOnInit(): void {
     void this.terminalService.startSession('job assistant app');

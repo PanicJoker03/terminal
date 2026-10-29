@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using TerminalApi.Domain.Entities;
 
-namespace TerminalApi.Services;
+namespace TerminalApi.Data;
 
 public class TerminalDbContext(DbContextOptions<TerminalDbContext> options) : DbContext(options)
 {

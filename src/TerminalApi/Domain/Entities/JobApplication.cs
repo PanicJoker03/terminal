@@ -1,4 +1,4 @@
-namespace TerminalApi.Services;
+namespace TerminalApi.Domain.Entities;
 
 public class JobApplication
 {

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace TerminalApi.Services;
+namespace TerminalApi.Data;
 
 public class TerminalDbContextFactory : IDesignTimeDbContextFactory<TerminalDbContext>
 {

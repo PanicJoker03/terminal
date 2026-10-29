@@ -1,3 +1,5 @@
+using TerminalApi.Domain.Entities;
+
 namespace TerminalApi.Services;
 
 public interface IJobApplicationRepository

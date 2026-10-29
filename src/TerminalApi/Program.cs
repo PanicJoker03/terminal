@@ -1,5 +1,6 @@
 ﻿using TerminalApi;
 using TerminalApi.Api;
+using TerminalApi.Data;
 using TerminalApi.Services;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Data.Sqlite;

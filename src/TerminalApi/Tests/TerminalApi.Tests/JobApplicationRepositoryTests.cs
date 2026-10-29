@@ -1,5 +1,7 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using TerminalApi.Data;
+using TerminalApi.Domain.Entities;
 using TerminalApi.Services;
 using Xunit;
 
