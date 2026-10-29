@@ -41,6 +41,7 @@ export class TerminalService {
   private sessionId: string | null = null;
   private lastEventSequence = 0;
   private pollingHandle: ReturnType<typeof globalThis.setTimeout> | null = null;
+  private allowEmptyInput = false;
 
   async startSession(name = 'MAYAN CONSULTING'): Promise<void> {
     if (this.sessionId) {
@@ -80,18 +81,21 @@ export class TerminalService {
   }
 
   async sendCommand(command: string): Promise<void> {
-    const trimmed = command.trim();
-
-    if (!trimmed) {
+    if (command === undefined || command === null) {
       return;
     }
 
-    if (trimmed.toLowerCase() === 'clear') {
-      this.clearTerminal();
+    const raw = command;
+
+    if (raw.trim() === '' && !this.allowEmptyInput) {
       return;
     }
 
-    this.addLine('command', `$ ${trimmed}`);
+    if (raw.trim() !== '') {
+      this.allowEmptyInput = false;
+    }
+
+    this.addLine('command', `$ ${raw || ' '}`);
 
     if (!this.sessionId) {
       await this.startSession('MAYAN CONSULTING');
@@ -102,7 +106,7 @@ export class TerminalService {
     }
 
     try {
-      await this.sendInput(trimmed);
+      await this.sendInput(raw);
       void this.pollEvents();
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -220,12 +224,19 @@ export class TerminalService {
   }
 
   private extractEventText(event: TerminalEventPayload): string | null {
-    const text = event.text ?? event.message ?? event.content ?? event.data ?? event.type ?? 'terminal event';
+    const source = [event.text, event.message, event.content, event.data]
+      .map((value) => (typeof value === 'string' ? value.trim() : value))
+      .find((value) => typeof value === 'string' && value.length > 0 && value !== 'undefined');
 
-    if (!text || text === 'undefined') {
+    if (typeof source !== 'string') {
       return null;
     }
 
-    return String(text).trim();
+    const normalized = source.toLowerCase();
+    if (normalized.includes('press any key') || normalized.includes('press enter') || normalized.includes('continue')) {
+      this.allowEmptyInput = true;
+    }
+
+    return source;
   }
 }

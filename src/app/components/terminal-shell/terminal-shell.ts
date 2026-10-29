@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TerminalService } from '../../services/terminal.service';
 
@@ -10,7 +10,9 @@ import { TerminalService } from '../../services/terminal.service';
   templateUrl: './terminal-shell.html',
   styleUrl: './terminal-shell.scss',
 })
-export class TerminalShellComponent {
+export class TerminalShellComponent implements AfterViewChecked {
+  @ViewChild('terminalOutput') private terminalOutput?: ElementRef<HTMLElement>;
+
   private readonly terminalService = inject(TerminalService);
 
   protected readonly terminalLines = this.terminalService.lines$;
@@ -21,14 +23,28 @@ export class TerminalShellComponent {
     void this.terminalService.startSession('MAYAN CONSULTING');
   }
 
-  protected submitCommand(): void {
-    const text = this.command().trim();
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
+  }
 
-    if (!text) {
+  protected submitCommand(): void {
+    const text = this.command();
+
+    if (text === undefined || text === null) {
       return;
     }
 
     void this.terminalService.sendCommand(text);
     this.command.set('');
+  }
+
+  private scrollToBottom(): void {
+    const element = this.terminalOutput?.nativeElement;
+
+    if (!element) {
+      return;
+    }
+
+    element.scrollTop = element.scrollHeight;
   }
 }

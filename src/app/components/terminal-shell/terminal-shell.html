@@ -8,7 +8,7 @@
     <div class="terminal-title">terminal</div>
   </header>
 
-  <main class="terminal-output" aria-live="polite">
+  <main #terminalOutput class="terminal-output" aria-live="polite">
     @for (line of terminalLines | async; track $index) {
       <div class="terminal-line line-{{ line.type }}">
         <span class="line-prefix">{{ line.type === 'command' ? '>' : '·' }}</span>
