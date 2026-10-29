@@ -1,0 +1,63 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDEs and editor state
+.idea/
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.swp
+*.swo
+
+# .NET build output and generated files
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+TestResults/
+*.userprefs
+*.pdb
+*.cache
+*.log
+
+# NuGet and .NET tooling caches
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+project.lock.json
+project.fragment.lock.json
+
+# Node.js and Angular dependencies/build output
+node_modules/
+dist/
+out-tsc/
+tmp/
+.angular/cache/
+.sass-cache/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local publishing and deployment output
+publish/
+*.publishsettings
+
+# Test and tool output
+TestResult.xml
+test-results/
+BenchmarkDotNet.Artifacts/
+*.trx
