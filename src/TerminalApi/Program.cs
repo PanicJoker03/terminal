@@ -1,5 +1,5 @@
-﻿using TerminalSharp;
-using TerminalSharp.Api;
+﻿using TerminalApi;
+using TerminalApi.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 

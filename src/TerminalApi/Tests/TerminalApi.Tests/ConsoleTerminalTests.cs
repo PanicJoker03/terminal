@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace TerminalSharp.Tests;
+namespace TerminalApi.Tests;
 
 public class ConsoleTerminalTests
 {

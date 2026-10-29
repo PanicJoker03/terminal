@@ -1,4 +1,4 @@
-namespace TerminalSharp.Modules
+namespace TerminalApi.Modules
 {
     public class Boss
     {        

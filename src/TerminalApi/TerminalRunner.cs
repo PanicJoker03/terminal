@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
 
-namespace TerminalSharp
+namespace TerminalApi
 {
     public interface ITerminalSessionService
     {
@@ -101,7 +101,7 @@ namespace TerminalSharp
 
                 try
                 {
-                    new TerminalSharp(Name, ConsoleColor.Yellow).Run();
+                    new TerminalApi(Name, ConsoleColor.Yellow).Run();
                 }
                 catch (OperationCanceledException) when (_cancellation.IsCancellationRequested)
                 {

@@ -1,8 +1,8 @@
-using TerminalSharp.Modules;
+using TerminalApi.Modules;
 
-namespace TerminalSharp
+namespace TerminalApi
 {
-    public class TerminalSharp
+    public class TerminalApi
     {
         const string ACTIVATION_WORD = "init";
         const string SHUTDOWN_WORD = "exit";
@@ -17,7 +17,7 @@ namespace TerminalSharp
         private RealityCheck realityCheck;
         private Counter counter;
 
-        public TerminalSharp(string? name, ConsoleColor color){ 
+        public TerminalApi(string? name, ConsoleColor color){ 
             this.name = name;
             terminal = ConsoleTerminal.GetInstance();
             terminal.TextColor = color;

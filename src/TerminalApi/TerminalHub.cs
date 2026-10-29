@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 
-namespace TerminalSharp
+namespace TerminalApi
 {
     public class TerminalHub : Hub
     {

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace TerminalSharp.Api;
+namespace TerminalApi.Api;
 
 /// <summary>Payload for creating a terminal session.</summary>
 public sealed record CreateTerminalSessionRequest

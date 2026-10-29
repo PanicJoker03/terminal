@@ -17,6 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../TerminalSharp.csproj" />
+    <ProjectReference Include="../../TerminalApi.csproj" />
   </ItemGroup>
 </Project>

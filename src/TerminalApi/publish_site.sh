@@ -4,7 +4,7 @@
 
 echo "copying site to aegis-hyper.com/terminal/"
 
-sudo cp -r ./publish/* /var/www/golem-sharp/
-# sudo dotnet /var/www/golem-sharp/GolemSharp.dll --urls http://localhost:5000
+sudo cp -r ./publish/* /var/www/terminal-api/
+# sudo dotnet /var/www/terminal-api/TerminalApi.dll --urls http://localhost:5000
 
 echo "publish completed"

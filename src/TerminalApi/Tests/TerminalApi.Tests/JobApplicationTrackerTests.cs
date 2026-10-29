@@ -1,7 +1,7 @@
-using TerminalSharp.Modules;
+using TerminalApi.Modules;
 using Xunit;
 
-namespace TerminalSharp.Tests;
+namespace TerminalApi.Tests;
 
 public class JobApplicationTrackerTests
 {

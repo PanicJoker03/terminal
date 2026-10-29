@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/src/" />
-  <Folder Name="/src/GOLEMSharp/">
-    <Project Path="src/GOLEMSharp/TerminalSharp.csproj" />
+  <Folder Name="/src/TerminalApi/">
+    <Project Path="src/TerminalApi/TerminalApi.csproj" />
   </Folder>
 </Solution>

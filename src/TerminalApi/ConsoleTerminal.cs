@@ -1,4 +1,4 @@
-namespace TerminalSharp
+namespace TerminalApi
 {
     public class ConsoleTerminal
     {
