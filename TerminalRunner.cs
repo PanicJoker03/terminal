@@ -52,8 +52,8 @@ namespace TerminalSharp
 
                 _runningTask = Task.Run(() =>
                 {
-                    var golem = new TerminalSharp("MAYAN CONSULTING", ConsoleColor.Yellow);
-                    golem.Run();
+                    var terminalApp = new TerminalSharp("JOB ASSISTANT APP", ConsoleColor.Yellow);
+                    terminalApp.Run();
                 });
             }
         }
