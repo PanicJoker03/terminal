@@ -9,6 +9,16 @@ export interface TerminalLine {
   text: string;
 }
 
+export interface JobApplication {
+  id: number;
+  timestamp: string;
+  company: string;
+  role: string;
+  status: string;
+  payment: string;
+  origin: string;
+}
+
 interface TerminalSessionPayload {
   id?: string;
   sessionId?: string;
@@ -42,6 +52,21 @@ export class TerminalService {
   private sessionId: string | null = null;
   private lastEventSequence = 0;
   private pollingHandle: ReturnType<typeof globalThis.setTimeout> | null = null;
+
+  async getJobApplications(): Promise<JobApplication[]> {
+    const response = await fetch(`${this.baseUrl}/api/terminal/jobs-applications`);
+
+    if (!response.ok) {
+      throw new Error(`job applications request failed (${response.status})`);
+    }
+
+    const payload: unknown = await response.json();
+    if (!Array.isArray(payload)) {
+      throw new Error('backend returned an invalid job applications response');
+    }
+
+    return payload as JobApplication[];
+  }
 
   async startSession(name = 'job assistant app'): Promise<void> {
     if (this.sessionId) {

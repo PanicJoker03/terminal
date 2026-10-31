@@ -1,6 +1,14 @@
 # Terminal
 Terminal is a program that helps me to resolve my daily work duties
 
+## NOTES
+
+run this on XENUL server to correct deploy
+
+export TERMINAL_SQLITE_PATH=/var/lib/terminal-app/terminal.db
+
+$ dotnet /var/www/terminal-api/terminal-app.dll --urls http://localhost:5000
+
 ## Features
 
 * Priorities from day

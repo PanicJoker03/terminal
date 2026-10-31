@@ -18,10 +18,14 @@
 
 .shell-layout {
   display: grid;
-  grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   height: 100%;
   max-height: 100vh;
   overflow: hidden;
+}
+
+.shell-layout.jobs-visible {
+  grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
 }
 
 .jobs-panel {
@@ -194,6 +198,11 @@
 @media (max-width: 640px) {
   .shell-layout {
     grid-template-columns: 1fr;
+  }
+
+  .shell-layout.jobs-visible {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(160px, 35%) minmax(0, 1fr);
   }
 
   .jobs-panel {

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR();
+builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddValidation();
 builder.Services.AddProblemDetails();
@@ -74,6 +75,7 @@ DateTimeOffset startedAt = DateTimeOffset.UtcNow;
 app.MapGet("/api/version", () => Results.Ok(new { sha256 = assemblyHash, startedAt }));
 
 app.MapHub<TerminalHub>("/ws/terminal");
+app.MapControllers();
 app.MapTerminalSessionEndpoints();
 
 app.Run();

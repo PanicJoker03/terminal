@@ -11,6 +11,8 @@ public class TerminalDbContext(DbContextOptions<TerminalDbContext> options) : Db
     {
         modelBuilder.Entity<JobApplication>(entity =>
         {
+            // Configuración de la entidad JobApplication
+            // Configuración de la tabla y la clave primaria
             entity.ToTable("JobApplications");
             entity.HasKey(application => application.Id);
 

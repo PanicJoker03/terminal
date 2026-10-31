@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
-import { TerminalService } from '../../services/terminal.service';
+import { JobApplication, TerminalService } from '../../services/terminal.service';
 
 @Component({
   selector: 'app-terminal-shell',
@@ -20,11 +20,10 @@ export class TerminalShellComponent implements AfterViewChecked {
   protected readonly command = signal('');
   protected readonly prompt = computed(() => 'guest@terminal:~$');
   protected readonly displayedColumns = ['company', 'role', 'status'];
-  protected readonly jobRows = [
-    { company: 'Acme Labs', role: 'Frontend Engineer', status: 'SENT' },
-    { company: 'Northstar', role: 'Platform Engineer', status: 'INTERVIEW' },
-    { company: 'Verve', role: 'Product Engineer', status: 'REPLIED' },
-  ];
+  protected readonly isJobsPanelVisible = signal(false);
+  protected readonly jobRows = signal<JobApplication[]>([]);
+  protected readonly isJobsLoading = signal(false);
+  protected readonly jobsError = signal<string | null>(null);
 
   ngOnInit(): void {
     void this.terminalService.startSession('job assistant app');
@@ -41,8 +40,26 @@ export class TerminalShellComponent implements AfterViewChecked {
       return;
     }
 
+    if (text.trim().toLowerCase() === 'load') {
+      this.isJobsPanelVisible.set(true);
+      void this.loadJobApplications();
+    }
+
     void this.terminalService.sendCommand(text);
     this.command.set('');
+  }
+
+  private async loadJobApplications(): Promise<void> {
+    this.isJobsLoading.set(true);
+    this.jobsError.set(null);
+
+    try {
+      this.jobRows.set(await this.terminalService.getJobApplications());
+    } catch (error) {
+      this.jobsError.set(error instanceof Error ? error.message : String(error));
+    } finally {
+      this.isJobsLoading.set(false);
+    }
   }
 
   private scrollToBottom(): void {
