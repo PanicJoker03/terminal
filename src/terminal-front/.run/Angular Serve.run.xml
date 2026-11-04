@@ -1,12 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Angular Serve" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/package.json" />
-    <command value="run" />
-    <scripts>
-      <script value="serve:open" />
-    </scripts>
-    <node-interpreter value="project" />
-    <package-manager value="npm" />
+    <command value="start" />
+    <node-interpreter value="$USER_HOME$/.nvm/versions/node/v26.5.0/bin/node" />
+    <package-manager value="$USER_HOME$/.nvm/versions/node/v26.5.0/bin/npm" />
     <envs>
       <env name="BROWSER" value="google-chrome" />
     </envs>

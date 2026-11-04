@@ -14,9 +14,11 @@ public sealed record JobApplicationResponse(
     string Origin);
 
 /// <summary>HTTP endpoints for terminal-related data outside the SignalR hub.</summary>
+public sealed record PriorityTaskUpdate(bool Completed);
+
 [ApiController]
 [Route("api/[controller]")]
-public sealed class TerminalController(IJobApplicationRepository jobApplications) : ControllerBase
+public sealed class TerminalController(IJobApplicationRepository jobApplications, IPriorityTasksStore priorityTasks) : ControllerBase
 {
     /// <summary>Returns persisted job applications from SQLite.</summary>
     [HttpGet("jobs-applications")]
@@ -35,5 +37,40 @@ public sealed class TerminalController(IJobApplicationRepository jobApplications
             .ToArray();
 
         return Ok(applications);
+    }
+
+    /// <summary>Loads daily tasks from Markdown, converting a legacy text file when needed.</summary>
+    [HttpGet("tasks")]
+    [ProducesResponseType<IReadOnlyList<PriorityTask>>(StatusCodes.Status200OK)]
+    public ActionResult<IReadOnlyList<PriorityTask>> GetTasks([FromQuery] string? date = null)
+    {
+        try
+        {
+            return Ok(priorityTasks.Load(date ?? DateTime.Now.ToString("ddMMyyyy")));
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
+
+    /// <summary>Updates a task checkbox and persists it to the day's Markdown file.</summary>
+    [HttpPut("tasks/{date}/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public IActionResult SetTaskCompleted(string date, int id, [FromBody] PriorityTaskUpdate update)
+    {
+        try
+        {
+            priorityTasks.SetCompleted(date, id, update.Completed);
+            return NoContent();
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
     }
 }

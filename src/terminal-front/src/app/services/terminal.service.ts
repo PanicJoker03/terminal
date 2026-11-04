@@ -19,6 +19,12 @@ export interface JobApplication {
   origin: string;
 }
 
+export interface PriorityTask {
+  id: number;
+  text: string;
+  completed: boolean;
+}
+
 interface TerminalSessionPayload {
   id?: string;
   sessionId?: string;
@@ -66,6 +72,28 @@ export class TerminalService {
     }
 
     return payload as JobApplication[];
+  }
+
+  async getPriorityTasks(date = this.todayDate()): Promise<PriorityTask[]> {
+    const response = await fetch(`${this.baseUrl}/api/terminal/tasks?date=${encodeURIComponent(date)}`);
+    if (!response.ok) throw new Error(`tasks request failed (${response.status})`);
+    const payload: unknown = await response.json();
+    if (!Array.isArray(payload)) throw new Error('backend returned an invalid tasks response');
+    return payload as PriorityTask[];
+  }
+
+  async setPriorityTaskCompleted(id: number, completed: boolean, date = this.todayDate()): Promise<void> {
+    const response = await fetch(`${this.baseUrl}/api/terminal/tasks/${encodeURIComponent(date)}/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ completed }),
+    });
+    if (!response.ok) throw new Error(`task update failed (${response.status})`);
+  }
+
+  private todayDate(): string {
+    const now = new Date();
+    return `${String(now.getDate()).padStart(2, '0')}${String(now.getMonth() + 1).padStart(2, '0')}${now.getFullYear()}`;
   }
 
   async startSession(name = 'job assistant app'): Promise<void> {

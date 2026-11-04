@@ -3,23 +3,23 @@ namespace TerminalApi.Services
     public class PrioritiesChecker : IPrioritiesChecker
     {        
         private ConsoleTerminal terminal;
-        private readonly string resultsDirectory;
+        private readonly string tasksDirectory;
 
         public PrioritiesChecker(IConfiguration? configuration = null)
         {
             terminal = ConsoleTerminal.GetInstance();
-            string configuredDirectory = configuration?["FilePaths:Results"] ?? "results";
-            resultsDirectory = Path.GetFullPath(configuredDirectory, AppContext.BaseDirectory);
+            string configuredDirectory = configuration?["FilePaths:Tasks"] ?? "tasks";
+            tasksDirectory = Path.GetFullPath(configuredDirectory, AppContext.BaseDirectory);
         }
         public void TakePriorities()
         {
             try
             {
-                Directory.CreateDirectory(resultsDirectory);
+                Directory.CreateDirectory(tasksDirectory);
             }
             catch (Exception ex) when (IsFileSystemException(ex))
             {
-                ReportFileSystemError("creating results directory", resultsDirectory, ex);
+                ReportFileSystemError("creating tasks directory", tasksDirectory, ex);
                 throw;
             }
 
@@ -27,8 +27,8 @@ namespace TerminalApi.Services
             string todaySign = DateTime.Now.ToString("ddMMyyyy");
 
             string outPath = Path.Combine(
-                resultsDirectory,
-                $"OUT_{todaySign}.txt"
+                tasksDirectory,
+                $"OUT_{todaySign}.md"
             );
             try
             {
@@ -63,9 +63,9 @@ namespace TerminalApi.Services
 
                 using (var writer = new StreamWriter(outPath, false))
                 {
-                    writer.WriteLine($"{todaySign} PRIORITY A IS: {priorityA}");
-                    writer.WriteLine($"{todaySign} PRIORITY B IS: {priorityB}");
-                    writer.WriteLine($"{todaySign} PRIORITY C IS: {priorityC}");
+                    writer.WriteLine($"- [ ] {todaySign} PRIORITY A IS: {priorityA}");
+                    writer.WriteLine($"- [ ] {todaySign} PRIORITY B IS: {priorityB}");
+                    writer.WriteLine($"- [ ] {todaySign} PRIORITY C IS: {priorityC}");
 
                     while (true)
                     {
@@ -76,7 +76,7 @@ namespace TerminalApi.Services
                         {
                             terminal.PrintLine("which:");
                             string which = (terminal.ReadLine() ?? "").ToUpper();
-                            writer.WriteLine($"another task is: {which}");
+                            writer.WriteLine($"- [ ] another task is: {which}");
                         }
                         else if (anotherTask == "n" || anotherTask == "no")
                         {
@@ -95,7 +95,7 @@ namespace TerminalApi.Services
             }
             catch (Exception ex) when (IsFileSystemException(ex))
             {
-                ReportFileSystemError("writing results file", outPath, ex);
+                ReportFileSystemError("writing tasks file", outPath, ex);
                 throw;
             }
             catch (Exception ex)
