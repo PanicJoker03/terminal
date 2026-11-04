@@ -27,6 +27,7 @@ if (!string.IsNullOrWhiteSpace(databaseDirectory))
 builder.Services.AddDbContext<TerminalDbContext>(options =>
     options.UseSqlite(sqliteConnectionString.ConnectionString));
 builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
+builder.Services.AddSingleton<IPriorityTasksStore, PriorityTasksStore>();
 builder.Services.AddTransient<IPrioritiesChecker, PrioritiesChecker>();
 builder.Services.AddTransient<IJobApplicationTracker, JobApplicationTracker>();
 builder.Services.AddTransient<IBoss, Boss>();
