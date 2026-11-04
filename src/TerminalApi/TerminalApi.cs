@@ -305,13 +305,10 @@ namespace TerminalApi
 
         public void Run()
         {
-            while(true)
-            {
-                InitialGreet();
-                Guard();
-                Cycle();
-                DoShutDown();   
-            }
+            InitialGreet();
+            Guard();
+            Cycle();
+            DoShutDown();
         }
     }
 }
