@@ -10,6 +10,7 @@ public class TerminalApiServiceTests
     {
         Assert.IsAssignableFrom<IBoss>(new Boss());
         Assert.IsAssignableFrom<ICounter>(new Counter());
+        Assert.IsAssignableFrom<IPomodoro>(new Pomodoro());
         Assert.True(typeof(IJobApplicationTracker).IsAssignableFrom(typeof(JobApplicationTracker)));
         Assert.IsAssignableFrom<IPrioritiesChecker>(new PrioritiesChecker());
         Assert.IsAssignableFrom<IRealityCheck>(new RealityCheck());

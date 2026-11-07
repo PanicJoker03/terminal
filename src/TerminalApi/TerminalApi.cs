@@ -16,6 +16,8 @@ namespace TerminalApi
         private readonly IWork work;
         private readonly IRealityCheck realityCheck;
         private readonly ICounter counter;
+        private readonly IPomodoro pomodoro;
+        private readonly IPriorityTasksStore priorityTasks;
         private readonly string tasksDirectory;
 
         public TerminalApi(
@@ -27,6 +29,8 @@ namespace TerminalApi
             IWork work,
             IRealityCheck realityCheck,
             ICounter counter,
+            IPomodoro pomodoro,
+            IPriorityTasksStore priorityTasks,
             IConfiguration configuration)
         {
             this.name = name;
@@ -38,8 +42,10 @@ namespace TerminalApi
             this.work = work;
             this.counter = counter;
             this.realityCheck = realityCheck;
-            string configuredResultsDirectory = configuration["FilePaths:Results"] ?? "results";
-            tasksDirectory = Path.GetFullPath(configuredResultsDirectory, AppContext.BaseDirectory);
+            this.pomodoro = pomodoro;
+            this.priorityTasks = priorityTasks;
+            string configuredTasksDirectory = configuration["FilePaths:Tasks"] ?? "tasks";
+            tasksDirectory = Path.GetFullPath(configuredTasksDirectory, AppContext.BaseDirectory);
         }
 
         private void HandleCommand(string command)
@@ -60,6 +66,11 @@ namespace TerminalApi
                 // COUNT
                 case "count":
                     counter.CountToTen();
+                    break;
+
+                // POMODORO
+                case "pomodoro":
+                    pomodoro.RunPomodoro();
                     break;
 
                 // CHECK
@@ -129,8 +140,16 @@ namespace TerminalApi
 
             try
             {
-                string filePath = Path.Combine(tasksDirectory, $"OUT_{dayToLoad}.txt");
-                string content = File.ReadAllText(filePath);
+                IReadOnlyList<PriorityTask> tasks = priorityTasks.Load(dayToLoad);
+                if (tasks.Count == 0)
+                {
+                    terminal.PrintLine("no record found");
+                    terminal.WaitUserInput();
+                    return;
+                }
+
+                string content = string.Join(Environment.NewLine, tasks.Select(task =>
+                    $"- [{(task.Completed ? 'x' : ' ')}] {task.Text}"));
 
                 terminal.ClearConsole();
                 terminal.PrintLine(content);
@@ -209,7 +228,7 @@ namespace TerminalApi
 
             try
             {
-                var records = Directory.GetFiles(tasksDirectory, "OUT_*.txt");
+                var records = Directory.GetFiles(tasksDirectory, "OUT_*.md");
 
                 foreach (var record in records)
                 {

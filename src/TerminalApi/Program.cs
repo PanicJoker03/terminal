@@ -34,6 +34,7 @@ builder.Services.AddTransient<IBoss, Boss>();
 builder.Services.AddTransient<IWork, Work>();
 builder.Services.AddTransient<IRealityCheck, RealityCheck>();
 builder.Services.AddTransient<ICounter, Counter>();
+builder.Services.AddTransient<IPomodoro, Pomodoro>();
 builder.Services.AddCors(options =>
 {
     string[] allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
