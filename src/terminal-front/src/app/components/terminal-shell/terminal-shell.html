@@ -1,5 +1,5 @@
 <section class="terminal-shell" aria-label="Terminal shell">
-  <div class="shell-layout" [class.jobs-visible]="isJobsPanelVisible() || isTasksPanelVisible()">
+  <div class="shell-layout" [class.panel-visible]="isJobsPanelVisible() || isTasksPanelVisible() || isClientChartVisible() || isBossChartVisible()">
     @if (isTasksPanelVisible()) {
     <aside class="jobs-panel tasks-panel" aria-label="Daily tasks panel">
       <div class="jobs-panel-header"><h2>Daily Tasks</h2></div>
@@ -53,6 +53,14 @@
           <p>No job applications loaded.</p>
         }
       </div>
+    </aside>
+    } @else if (isClientChartVisible()) {
+    <aside class="jobs-panel client-panel" aria-label="Client chart panel">
+      <app-client-chart></app-client-chart>
+    </aside>
+    } @else if (isBossChartVisible()) {
+    <aside class="jobs-panel client-panel" aria-label="Boss chart panel">
+      <app-boss-chart></app-boss-chart>
     </aside>
     }
 

@@ -2,12 +2,14 @@ import { CommonModule } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
+import { BossChartComponent } from '../boss-chart/boss-chart';
+import { ClientChartComponent } from '../client-chart/client-chart';
 import { JobApplication, PriorityTask, TerminalService } from '../../services/terminal.service';
 
 @Component({
   selector: 'app-terminal-shell',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatTableModule],
+  imports: [CommonModule, FormsModule, MatTableModule, ClientChartComponent, BossChartComponent],
   templateUrl: './terminal-shell.html',
   styleUrl: './terminal-shell.scss',
 })
@@ -22,6 +24,8 @@ export class TerminalShellComponent implements AfterViewChecked {
   protected readonly displayedColumns = ['company', 'role', 'status'];
   protected readonly isJobsPanelVisible = signal(false);
   protected readonly isTasksPanelVisible = signal(false);
+  protected readonly isClientChartVisible = signal(false);
+  protected readonly isBossChartVisible = signal(false);
   protected readonly jobRows = signal<JobApplication[]>([]);
   protected readonly isJobsLoading = signal(false);
   protected readonly jobsError = signal<string | null>(null);
@@ -44,9 +48,27 @@ export class TerminalShellComponent implements AfterViewChecked {
       return;
     }
 
-    if (text.trim().toLowerCase() === 'load') {
+    const normalized = text.trim().toLowerCase();
+
+    if (normalized === 'load') {
       this.isJobsPanelVisible.set(true);
+      this.isTasksPanelVisible.set(false);
+      this.isClientChartVisible.set(false);
       void this.loadJobApplications();
+    }
+
+    if (normalized === 'client' || normalized === 'clients' || normalized === 'chart') {
+      this.isClientChartVisible.set(true);
+      this.isBossChartVisible.set(false);
+      this.isJobsPanelVisible.set(false);
+      this.isTasksPanelVisible.set(false);
+    }
+
+    if (normalized === 'boss') {
+      this.isBossChartVisible.set(true);
+      this.isClientChartVisible.set(false);
+      this.isJobsPanelVisible.set(false);
+      this.isTasksPanelVisible.set(false);
     }
 
     void this.terminalService.sendCommand(text);
