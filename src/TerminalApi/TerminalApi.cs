@@ -108,6 +108,10 @@ namespace TerminalApi
                     PrintBossChart();
                     break;
 
+                case "eisenhower":
+                    PrintEisenhowerMatrix();
+                    break;
+
                 case "client":
                     PrintClientChart();
                     break;
@@ -266,6 +270,20 @@ namespace TerminalApi
             terminal.PrintLine(".cliente");
             terminal.PrintLine(".cliente.siempre.tiene.la.razon");
             //Relacionarse con las personas
+            terminal.WaitUserInput();
+        }
+
+        private void PrintEisenhowerMatrix()
+        {
+            terminal.ClearConsole();
+            terminal.PrintLine("                         URGENTE                                      NO URGENTE");
+            terminal.PrintLine("       ---------------------------------------------------------------------------");
+            terminal.PrintLine("IMPORTANTE | Tareas para hacer primero, antes de 24 hrs | Se programan para mas");
+            terminal.PrintLine("           |                                             | adelante; se pueden hacer a futuro");
+            terminal.PrintLine("       ---------------------------------------------------------------------------");
+            terminal.PrintLine("NO         | Tareas para delegar a otras personas       | Tareas para eliminar");
+            terminal.PrintLine("IMPORTANTE |                                             |");
+            terminal.PrintLine("       ---------------------------------------------------------------------------");
             terminal.WaitUserInput();
         }
 

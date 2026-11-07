@@ -1,5 +1,5 @@
 <section class="terminal-shell" aria-label="Terminal shell">
-  <div class="shell-layout" [class.panel-visible]="isJobsPanelVisible() || isTasksPanelVisible() || isClientChartVisible() || isBossChartVisible()">
+  <div class="shell-layout" [class.panel-visible]="isJobsPanelVisible() || isTasksPanelVisible() || isClientChartVisible() || isBossChartVisible() || isEisenhowerMatrixVisible()">
     @if (isTasksPanelVisible()) {
     <aside class="jobs-panel tasks-panel" aria-label="Daily tasks panel">
       <div class="jobs-panel-header"><h2>Daily Tasks</h2></div>
@@ -61,6 +61,10 @@
     } @else if (isBossChartVisible()) {
     <aside class="jobs-panel client-panel" aria-label="Boss chart panel">
       <app-boss-chart></app-boss-chart>
+    </aside>
+    } @else if (isEisenhowerMatrixVisible()) {
+    <aside class="jobs-panel client-panel" aria-label="Eisenhower matrix panel">
+      <app-eisenhower-matrix></app-eisenhower-matrix>
     </aside>
     }
 
