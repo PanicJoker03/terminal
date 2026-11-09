@@ -8,6 +8,7 @@ namespace TerminalApi
         const string SHUTDOWN_WORD = "exit";
         public string? name { get; private set; }
         private string userName = "";
+        private bool isAuthenticated;
 
         private ConsoleTerminal terminal;
         private readonly IPrioritiesChecker prioritiesChecker;
@@ -50,6 +51,12 @@ namespace TerminalApi
 
         private void HandleCommand(string command)
         {
+            if (!isAuthenticated)
+            {
+                terminal.PrintLine("say the word to activate first:");
+                return;
+            }
+
             switch (command)
             {
                 // PRIORITIES/TASKS
@@ -316,6 +323,7 @@ namespace TerminalApi
 
                 if (optTxt == ACTIVATION_WORD)
                 {
+                    isAuthenticated = true;
                     return;
                 }
 

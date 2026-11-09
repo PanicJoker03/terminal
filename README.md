@@ -7,8 +7,8 @@ A sofware that helps me to resolve, make some $$$ and be at peace.
 TODO: 
 add this commands
 
-* pomodoro, starts panel with pomodoro timer
-* eisenhower, start 4 quad grid to clasify tasks 
+* ok,pomodoro, starts panel with pomodoro timer
+* ok,eisenhower, start 4 quad grid to clasify tasks 
 * trello, opens trello
 * github, opens github
 * linkedin, opens linkedin
@@ -21,6 +21,7 @@ add this commands
 * boss --status, manage multiple bosses
 * creed, prints the creed
 * ai, opens chatgpt
+* journal, daily journal capture 
 
 store tasks in sqlite database
 permit more complex tasks (time span various days)
