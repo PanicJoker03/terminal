@@ -13,6 +13,7 @@ namespace TerminalApi
         private ConsoleTerminal terminal;
         private readonly IPrioritiesChecker prioritiesChecker;
         private readonly IJobApplicationTracker jobApplicationTracker;
+        private readonly IInterviewScheduler interviewScheduler;
         private readonly IBoss boss;
         private readonly IWork work;
         private readonly IRealityCheck realityCheck;
@@ -26,6 +27,7 @@ namespace TerminalApi
             ConsoleColor color,
             IPrioritiesChecker prioritiesChecker,
             IJobApplicationTracker jobApplicationTracker,
+            IInterviewScheduler interviewScheduler,
             IBoss boss,
             IWork work,
             IRealityCheck realityCheck,
@@ -39,6 +41,7 @@ namespace TerminalApi
             terminal.TextColor = color;
             this.prioritiesChecker = prioritiesChecker;
             this.jobApplicationTracker = jobApplicationTracker;
+            this.interviewScheduler = interviewScheduler;
             this.boss = boss;
             this.work = work;
             this.counter = counter;
@@ -134,6 +137,35 @@ namespace TerminalApi
                 case "order":
                     DoOrder();
                     break;
+
+                case "trello":
+                    terminal.PrintLine("opening Trello");
+                    break;
+
+                case "github":
+                    terminal.PrintLine("opening GitHub");
+                    break;
+
+                case "linkedin":
+                    terminal.PrintLine("opening LinkedIn");
+                    break;
+
+                case "computrabajo":
+                    terminal.PrintLine("opening Computrabajo");
+                    break;
+
+                case "occ":
+                    terminal.PrintLine("opening OCC");
+                    break;
+
+                case "interview":
+                    interviewScheduler.ManageInterviews();
+                    break;
+
+                case "creed":
+                    PrintCreed();
+                    break;
+
                 case SHUTDOWN_WORD:
                     //just idle
                     break;
@@ -215,6 +247,23 @@ namespace TerminalApi
             //todo: order something, a sort maybe
             terminal.ClearConsole();
             terminal.PrintLine($"where?");
+            terminal.WaitUserInput();
+        }
+
+        private void PrintCreed()
+        {
+            terminal.ClearConsole();
+            terminal.PrintLiteralLine("The Contract Is Sacred.");
+            terminal.PrintLiteralLine("");
+            terminal.PrintLiteralLine("I Obey the Contract.");
+            terminal.PrintLiteralLine("");
+            terminal.PrintLiteralLine("The Work Gets Done.");
+            terminal.PrintLiteralLine("");
+            terminal.PrintLiteralLine("The Payment Is Made.");
+            terminal.PrintLiteralLine("");
+            terminal.PrintLiteralLine("Nothing Is Personal.");
+            terminal.PrintLiteralLine("");
+            terminal.PrintLiteralLine("Anything Outside the Work Is a Distraction.");
             terminal.WaitUserInput();
         }
         

@@ -21,8 +21,10 @@ export class TerminalShellComponent implements AfterViewChecked {
 
   protected readonly terminalLines = this.terminalService.lines$;
   protected readonly command = signal('');
-  protected readonly prompt = computed(() => 'guest@terminal:~$');
-  protected readonly displayedColumns = ['company', 'role', 'status'];
+  protected readonly prompt = computed(() => `${this.terminalService.userName()}@terminal:~$`);
+  protected readonly displayedColumns = [
+    'id', 'timestamp', 'company', 'role', 'status', 'modality', 'priority', 'payment', 'origin',
+  ];
   protected readonly isJobsPanelVisible = signal(false);
   protected readonly isTasksPanelVisible = signal(false);
   protected readonly isClientChartVisible = signal(false);
@@ -51,6 +53,36 @@ export class TerminalShellComponent implements AfterViewChecked {
     }
 
     const normalized = text.trim().toLowerCase();
+
+    if (this.terminalService.isInitialized && normalized === 'trello') {
+      window.open(
+        'https://trello.com/u/luiscarlosnunezguerra/boards',
+        '_blank',
+        'noopener,noreferrer',
+      );
+    }
+
+    if (this.terminalService.isInitialized && normalized === 'github') {
+      window.open('https://github.com/PanicJoker03', '_blank', 'noopener,noreferrer');
+    }
+
+    if (this.terminalService.isInitialized && normalized === 'linkedin') {
+      window.open('https://www.linkedin.com/feed/foryou/', '_blank', 'noopener,noreferrer');
+    }
+
+    if (this.terminalService.isInitialized && normalized === 'computrabajo') {
+      window.open('https://mx.computrabajo.com', '_blank', 'noopener,noreferrer');
+    }
+
+    if (this.terminalService.isInitialized && normalized === 'occ') {
+      window.open('https://candidato.occ.com.mx/dashboard', '_blank', 'noopener,noreferrer');
+    }
+
+    if (!this.terminalService.isInitialized) {
+      void this.terminalService.sendCommand(text);
+      this.command.set('');
+      return;
+    }
 
     if (normalized === 'load') {
       this.isJobsPanelVisible.set(true);
@@ -88,6 +120,10 @@ export class TerminalShellComponent implements AfterViewChecked {
   }
 
   protected async showTasks(): Promise<void> {
+    if (!this.terminalService.isInitialized) {
+      void this.terminalService.sendCommand('tasks');
+      return;
+    }
     this.isTasksPanelVisible.set(true);
     this.isJobsPanelVisible.set(false);
     this.isTasksLoading.set(true);
@@ -102,6 +138,10 @@ export class TerminalShellComponent implements AfterViewChecked {
   }
 
   protected async toggleTask(task: PriorityTask): Promise<void> {
+    if (!this.terminalService.isInitialized) {
+      void this.terminalService.sendCommand('tasks');
+      return;
+    }
     const completed = !task.completed;
     this.taskRows.update(rows => rows.map(row => row.id === task.id ? { ...row, completed } : row));
     try {

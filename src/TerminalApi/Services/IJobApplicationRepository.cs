@@ -4,7 +4,15 @@ namespace TerminalApi.Services;
 
 public interface IJobApplicationRepository
 {
-    JobApplication Create(DateTime timestamp, string company, string role, string status, string payment, string origin);
+    JobApplication Create(
+        DateTime timestamp,
+        string company,
+        string role,
+        string status,
+        string payment,
+        string origin,
+        string modality = "on-site",
+        string priority = "C");
 
     IReadOnlyList<JobApplication> List();
 

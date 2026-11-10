@@ -42,6 +42,21 @@ namespace TerminalApi
             }
         }
 
+        public void PrintLiteralLine(string line)
+        {
+            var handlers = CurrentHandlers.Value;
+            if (handlers != null)
+            {
+                handlers.Output(line).GetAwaiter().GetResult();
+            }
+            else
+            {
+                Console.ForegroundColor = TextColor;
+                Console.WriteLine(line);
+                Console.ResetColor();
+            }
+        }
+
         public void WaitUserInput()
         {
             var handlers = CurrentHandlers.Value;

@@ -76,13 +76,27 @@ namespace TerminalApi.Services
                 status = "SENT";
             }
 
+            terminal.PrintLine("modality (default: on-site):");
+            string modality = (terminal.ReadLine() ?? "").Trim();
+            if (string.IsNullOrWhiteSpace(modality))
+            {
+                modality = "on-site";
+            }
+
+            terminal.PrintLine("priority (default: C):");
+            string priority = (terminal.ReadLine() ?? "").Trim();
+            if (string.IsNullOrWhiteSpace(priority))
+            {
+                priority = "C";
+            }
+
             terminal.PrintLine("payment:");
             string payment = (terminal.ReadLine() ?? "").Trim();
 
             terminal.PrintLine("origin:");
             string origin = (terminal.ReadLine() ?? "").Trim();
 
-            repository.Create(DateTime.Now, company, role, status, payment, origin);
+            repository.Create(DateTime.Now, company, role, status, payment, origin, modality, priority);
 
             terminal.PrintLine("application saved successfully.");
             terminal.PrintLine("press any key to return...");
@@ -177,14 +191,17 @@ namespace TerminalApi.Services
         {
             var rows = new List<string[]>
             {
-                new[] { "TIMESTAMP", "COMPANY", "ROLE", "STATUS", "PAYMENT", "ORIGIN" }
+                new[] { "ID", "TIMESTAMP", "COMPANY", "ROLE", "STATUS", "MODALITY", "PRIORITY", "PAYMENT", "ORIGIN" }
             };
             rows.AddRange(applications.Select(application => new[]
             {
+                application.Id.ToString(),
                 application.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"),
                 application.Company,
                 application.Role,
                 application.Status,
+                application.Modality,
+                application.Priority,
                 application.Payment,
                 application.Origin
             }));

@@ -92,9 +92,12 @@ namespace TerminalApi
         private readonly CancellationToken _cancellationToken;
         private readonly object _eventLock = new();
         private readonly Queue<TerminalEvent> _events = new();
+        private readonly object _userNameLock = new();
         private Task? _runningTask;
         private long _nextSequence;
         private int _disposed;
+        private bool _hasReceivedUserName;
+        private string? _userName;
 
         internal TerminalSession(string id, string? name, IHubContext<TerminalHub> hub, IServiceProvider services, Action onCompleted)
         {
@@ -108,6 +111,16 @@ namespace TerminalApi
 
         public string Id { get; }
         public string Name { get; }
+        public string? UserName
+        {
+            get
+            {
+                lock (_userNameLock)
+                {
+                    return _userName;
+                }
+            }
+        }
         public bool IsRunning => _runningTask is { IsCompleted: false };
 
         internal void Start()
@@ -143,7 +156,27 @@ namespace TerminalApi
 
         public bool EnqueueInput(string? value)
         {
-            return IsRunning && _input.Writer.TryWrite(NormalizeInput(value));
+            if (!IsRunning)
+            {
+                return false;
+            }
+
+            string normalizedInput = NormalizeInput(value);
+            lock (_userNameLock)
+            {
+                if (!_input.Writer.TryWrite(normalizedInput))
+                {
+                    return false;
+                }
+
+                if (!_hasReceivedUserName)
+                {
+                    _userName = normalizedInput.Trim();
+                    _hasReceivedUserName = true;
+                }
+            }
+
+            return true;
         }
 
         public static string NormalizeInput(string? value)
