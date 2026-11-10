@@ -9,9 +9,9 @@ add this commands
 
 * ok,pomodoro, starts panel with pomodoro timer
 * ok,eisenhower, start 4 quad grid to clasify tasks 
-* trello, opens trello
-* github, opens github
-* linkedin, opens linkedin
+* ok, trello, opens trello
+* ok, github, opens github
+* ok, linkedin, opens linkedin
 * courses, add, update courses status
 * cv, configure skills, jobs etc -> generate cv yaml
 * agenda, configure events, store on sqlite
@@ -36,3 +36,4 @@ login
 show username on the command prompt
 
 remove all front-end artifacts from API project
+A sofware that helps me to resolve, make some tasks and be at peace.
