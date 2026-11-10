@@ -8,14 +8,18 @@ namespace TerminalApi
         const string SHUTDOWN_WORD = "exit";
         public string? name { get; private set; }
         private string userName = "";
+        private bool isAuthenticated;
 
         private ConsoleTerminal terminal;
         private readonly IPrioritiesChecker prioritiesChecker;
         private readonly IJobApplicationTracker jobApplicationTracker;
+        private readonly IInterviewScheduler interviewScheduler;
         private readonly IBoss boss;
         private readonly IWork work;
         private readonly IRealityCheck realityCheck;
         private readonly ICounter counter;
+        private readonly IPomodoro pomodoro;
+        private readonly IPriorityTasksStore priorityTasks;
         private readonly string tasksDirectory;
 
         public TerminalApi(
@@ -23,10 +27,13 @@ namespace TerminalApi
             ConsoleColor color,
             IPrioritiesChecker prioritiesChecker,
             IJobApplicationTracker jobApplicationTracker,
+            IInterviewScheduler interviewScheduler,
             IBoss boss,
             IWork work,
             IRealityCheck realityCheck,
             ICounter counter,
+            IPomodoro pomodoro,
+            IPriorityTasksStore priorityTasks,
             IConfiguration configuration)
         {
             this.name = name;
@@ -34,16 +41,25 @@ namespace TerminalApi
             terminal.TextColor = color;
             this.prioritiesChecker = prioritiesChecker;
             this.jobApplicationTracker = jobApplicationTracker;
+            this.interviewScheduler = interviewScheduler;
             this.boss = boss;
             this.work = work;
             this.counter = counter;
             this.realityCheck = realityCheck;
-            string configuredResultsDirectory = configuration["FilePaths:Results"] ?? "results";
-            tasksDirectory = Path.GetFullPath(configuredResultsDirectory, AppContext.BaseDirectory);
+            this.pomodoro = pomodoro;
+            this.priorityTasks = priorityTasks;
+            string configuredTasksDirectory = configuration["FilePaths:Tasks"] ?? "tasks";
+            tasksDirectory = Path.GetFullPath(configuredTasksDirectory, AppContext.BaseDirectory);
         }
 
         private void HandleCommand(string command)
         {
+            if (!isAuthenticated)
+            {
+                terminal.PrintLine("say the word to activate first:");
+                return;
+            }
+
             switch (command)
             {
                 // PRIORITIES/TASKS
@@ -60,6 +76,11 @@ namespace TerminalApi
                 // COUNT
                 case "count":
                     counter.CountToTen();
+                    break;
+
+                // POMODORO
+                case "pomodoro":
+                    pomodoro.RunPomodoro();
                     break;
 
                 // CHECK
@@ -97,6 +118,10 @@ namespace TerminalApi
                     PrintBossChart();
                     break;
 
+                case "eisenhower":
+                    PrintEisenhowerMatrix();
+                    break;
+
                 case "client":
                     PrintClientChart();
                     break;
@@ -112,6 +137,35 @@ namespace TerminalApi
                 case "order":
                     DoOrder();
                     break;
+
+                case "trello":
+                    terminal.PrintLine("opening Trello");
+                    break;
+
+                case "github":
+                    terminal.PrintLine("opening GitHub");
+                    break;
+
+                case "linkedin":
+                    terminal.PrintLine("opening LinkedIn");
+                    break;
+
+                case "computrabajo":
+                    terminal.PrintLine("opening Computrabajo");
+                    break;
+
+                case "occ":
+                    terminal.PrintLine("opening OCC");
+                    break;
+
+                case "interview":
+                    interviewScheduler.ManageInterviews();
+                    break;
+
+                case "creed":
+                    PrintCreed();
+                    break;
+
                 case SHUTDOWN_WORD:
                     //just idle
                     break;
@@ -129,8 +183,16 @@ namespace TerminalApi
 
             try
             {
-                string filePath = Path.Combine(tasksDirectory, $"OUT_{dayToLoad}.txt");
-                string content = File.ReadAllText(filePath);
+                IReadOnlyList<PriorityTask> tasks = priorityTasks.Load(dayToLoad);
+                if (tasks.Count == 0)
+                {
+                    terminal.PrintLine("no record found");
+                    terminal.WaitUserInput();
+                    return;
+                }
+
+                string content = string.Join(Environment.NewLine, tasks.Select(task =>
+                    $"- [{(task.Completed ? 'x' : ' ')}] {task.Text}"));
 
                 terminal.ClearConsole();
                 terminal.PrintLine(content);
@@ -187,6 +249,23 @@ namespace TerminalApi
             terminal.PrintLine($"where?");
             terminal.WaitUserInput();
         }
+
+        private void PrintCreed()
+        {
+            terminal.ClearConsole();
+            terminal.PrintLiteralLine("The Contract Is Sacred.");
+            terminal.PrintLiteralLine("");
+            terminal.PrintLiteralLine("I Obey the Contract.");
+            terminal.PrintLiteralLine("");
+            terminal.PrintLiteralLine("The Work Gets Done.");
+            terminal.PrintLiteralLine("");
+            terminal.PrintLiteralLine("The Payment Is Made.");
+            terminal.PrintLiteralLine("");
+            terminal.PrintLiteralLine("Nothing Is Personal.");
+            terminal.PrintLiteralLine("");
+            terminal.PrintLiteralLine("Anything Outside the Work Is a Distraction.");
+            terminal.WaitUserInput();
+        }
         
         private void PrintClients()
         {
@@ -209,7 +288,7 @@ namespace TerminalApi
 
             try
             {
-                var records = Directory.GetFiles(tasksDirectory, "OUT_*.txt");
+                var records = Directory.GetFiles(tasksDirectory, "OUT_*.md");
 
                 foreach (var record in records)
                 {
@@ -250,6 +329,20 @@ namespace TerminalApi
             terminal.WaitUserInput();
         }
 
+        private void PrintEisenhowerMatrix()
+        {
+            terminal.ClearConsole();
+            terminal.PrintLine("                         URGENTE                                      NO URGENTE");
+            terminal.PrintLine("       ---------------------------------------------------------------------------");
+            terminal.PrintLine("IMPORTANTE | Tareas para hacer primero, antes de 24 hrs | Se programan para mas");
+            terminal.PrintLine("           |                                             | adelante; se pueden hacer a futuro");
+            terminal.PrintLine("       ---------------------------------------------------------------------------");
+            terminal.PrintLine("NO         | Tareas para delegar a otras personas       | Tareas para eliminar");
+            terminal.PrintLine("IMPORTANTE |                                             |");
+            terminal.PrintLine("       ---------------------------------------------------------------------------");
+            terminal.WaitUserInput();
+        }
+
         public void Cycle()
         {
             string command = "";
@@ -279,6 +372,7 @@ namespace TerminalApi
 
                 if (optTxt == ACTIVATION_WORD)
                 {
+                    isAuthenticated = true;
                     return;
                 }
 
@@ -305,13 +399,10 @@ namespace TerminalApi
 
         public void Run()
         {
-            while(true)
-            {
-                InitialGreet();
-                Guard();
-                Cycle();
-                DoShutDown();   
-            }
+            InitialGreet();
+            Guard();
+            Cycle();
+            DoShutDown();
         }
     }
 }

@@ -24,15 +24,20 @@
   overflow: hidden;
 }
 
-.shell-layout.jobs-visible {
+.shell-layout.panel-visible {
   grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
 }
 
 .jobs-panel {
   display: flex;
   flex-direction: column;
+  min-height: 0;
   background: #0a1210;
   border-right: 1px solid rgba(146, 255, 185, 0.2);
+}
+
+.client-panel {
+  overflow: hidden;
 }
 
 .jobs-panel-header {
@@ -54,6 +59,7 @@
 
 .jobs-panel-table-wrap {
   flex: 1;
+  min-height: 0;
   overflow: auto;
   padding: 0.5rem 0.75rem 0.75rem;
 }
@@ -67,6 +73,7 @@
 
 .jobs-table {
   width: 100%;
+  min-width: 900px;
   background: transparent;
   color: #d8ffe6;
 }

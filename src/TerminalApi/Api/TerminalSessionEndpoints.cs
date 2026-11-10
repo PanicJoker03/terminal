@@ -15,6 +15,7 @@ public sealed record CreateTerminalSessionRequest
 public sealed record TerminalSessionResponse(
     string Id,
     string Name,
+    string? UserName,
     bool IsRunning,
     string WebSocketEndpoint);
 
@@ -149,6 +150,7 @@ public static class TerminalSessionEndpoints
         return new TerminalSessionResponse(
             session.Id,
             session.Name,
+            session.UserName,
             session.IsRunning,
             "/ws/terminal");
     }

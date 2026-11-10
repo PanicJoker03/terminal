@@ -12,7 +12,9 @@ public class JobApplicationRepository(TerminalDbContext context) : IJobApplicati
         string role,
         string status,
         string payment,
-        string origin)
+        string origin,
+        string modality = "on-site",
+        string priority = "C")
     {
         var application = new JobApplication
         {
@@ -21,7 +23,9 @@ public class JobApplicationRepository(TerminalDbContext context) : IJobApplicati
             Role = role,
             Status = status,
             Payment = payment,
-            Origin = origin
+            Origin = origin,
+            Modality = string.IsNullOrWhiteSpace(modality) ? "on-site" : modality,
+            Priority = string.IsNullOrWhiteSpace(priority) ? "C" : priority
         };
 
         context.JobApplications.Add(application);

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -17,6 +17,8 @@ export interface JobApplication {
   status: string;
   payment: string;
   origin: string;
+  modality: string;
+  priority: string;
 }
 
 export interface PriorityTask {
@@ -30,6 +32,7 @@ interface TerminalSessionPayload {
   sessionId?: string;
   session_id?: string;
   name?: string;
+  userName?: string | null;
   status?: string;
 }
 
@@ -47,6 +50,8 @@ interface TerminalEventPayload {
   providedIn: 'root',
 })
 export class TerminalService {
+  readonly userName = signal('guest');
+
   private readonly linesSubject = new BehaviorSubject<TerminalLine[]>([
     { type: 'system', text: 'terminal ready' },
     { type: 'system', text: 'waiting for terminal session...' },
@@ -54,12 +59,19 @@ export class TerminalService {
 
   readonly lines$: Observable<TerminalLine[]> = this.linesSubject.asObservable();
 
+  get isInitialized(): boolean {
+    return this.initialized;
+  }
+
   private readonly baseUrl = environment.apiBaseUrl.replace(/\/+$/, '');
   private sessionId: string | null = null;
+  private initialized = false;
+  private hasProvidedName = false;
   private lastEventSequence = 0;
   private pollingHandle: ReturnType<typeof globalThis.setTimeout> | null = null;
 
   async getJobApplications(): Promise<JobApplication[]> {
+    this.requireInitialization();
     const response = await fetch(`${this.baseUrl}/api/terminal/jobs-applications`);
 
     if (!response.ok) {
@@ -75,6 +87,7 @@ export class TerminalService {
   }
 
   async getPriorityTasks(date = this.todayDate()): Promise<PriorityTask[]> {
+    this.requireInitialization();
     const response = await fetch(`${this.baseUrl}/api/terminal/tasks?date=${encodeURIComponent(date)}`);
     if (!response.ok) throw new Error(`tasks request failed (${response.status})`);
     const payload: unknown = await response.json();
@@ -83,6 +96,7 @@ export class TerminalService {
   }
 
   async setPriorityTaskCompleted(id: number, completed: boolean, date = this.todayDate()): Promise<void> {
+    this.requireInitialization();
     const response = await fetch(`${this.baseUrl}/api/terminal/tasks/${encodeURIComponent(date)}/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -140,7 +154,13 @@ export class TerminalService {
 
     const raw = command;
 
-    if (raw.trim().toLowerCase() === 'clear') {
+    const isInit = raw.trim().toLowerCase() === 'init';
+    if (!this.initialized && this.hasProvidedName && !isInit) {
+      this.addLine('error', 'terminal not initialized; enter init first');
+      return;
+    }
+
+    if (this.initialized && raw.trim().toLowerCase() === 'clear') {
       this.clearTerminal();
       return;
     }
@@ -157,10 +177,22 @@ export class TerminalService {
 
     try {
       await this.sendInput(raw === '' ? '<enter>' : raw);
+      if (!this.hasProvidedName) {
+        this.hasProvidedName = true;
+        this.userName.set(raw.trim() || 'guest');
+      } else if (isInit) {
+        this.initialized = true;
+      }
       void this.pollEvents();
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       this.addLine('error', `error: ${message}`);
+    }
+  }
+
+  private requireInitialization(): void {
+    if (!this.initialized) {
+      throw new Error('terminal not initialized; enter init first');
     }
   }
 
@@ -184,6 +216,9 @@ export class TerminalService {
       this.addLine('error', `session teardown failed: ${message}`);
     } finally {
       this.sessionId = null;
+      this.initialized = false;
+      this.hasProvidedName = false;
+      this.userName.set('guest');
       this.lastEventSequence = 0;
       this.clearPolling();
     }

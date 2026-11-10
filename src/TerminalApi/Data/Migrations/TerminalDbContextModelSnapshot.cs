@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TerminalApi.Data;
-using TerminalApi.Domain.Entities;
-using TerminalApi.Services;
 
 #nullable disable
 
@@ -19,6 +17,49 @@ namespace TerminalApi.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.0");
 
+            modelBuilder.Entity("TerminalApi.Domain.Entities.Interview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Attendants")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CompanyClient")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Day")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Hour")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Organizer")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Month", "Day");
+
+                    b.ToTable("Interviews", (string)null);
+                });
+
             modelBuilder.Entity("TerminalApi.Domain.Entities.JobApplication", b =>
                 {
                     b.Property<int>("Id")
@@ -29,6 +70,12 @@ namespace TerminalApi.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Modality")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("on-site");
+
                     b.Property<string>("Origin")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -36,6 +83,12 @@ namespace TerminalApi.Data.Migrations
                     b.Property<string>("Payment")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("C");
 
                     b.Property<string>("Role")
                         .IsRequired()

@@ -15,4 +15,8 @@ public class JobApplication
     public string Payment { get; set; } = string.Empty;
 
     public string Origin { get; set; } = string.Empty;
+
+    public string Modality { get; set; } = "on-site";
+
+    public string Priority { get; set; } = "C";
 }

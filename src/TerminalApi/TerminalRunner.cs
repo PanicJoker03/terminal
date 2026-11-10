@@ -27,7 +27,7 @@ namespace TerminalApi
         public TerminalSession CreateSession(string? name)
         {
             string id = Guid.NewGuid().ToString("D");
-            var session = new TerminalSession(id, name, _hub, _services);
+            var session = new TerminalSession(id, name, _hub, _services, () => RemoveCompletedSessionById(id));
             if (!_sessions.TryAdd(id, session))
             {
                 throw new InvalidOperationException("Could not create a terminal session.");
@@ -35,6 +35,14 @@ namespace TerminalApi
 
             session.Start();
             return session;
+        }
+
+        private void RemoveCompletedSessionById(string id)
+        {
+            if (_sessions.TryRemove(id, out TerminalSession? session))
+            {
+                session.Dispose();
+            }
         }
 
         public bool TryGetSession(string id, out TerminalSession? session)
@@ -73,25 +81,46 @@ namespace TerminalApi
         private const int MaximumBufferedEvents = 1000;
         private readonly IHubContext<TerminalHub> _hub;
         private readonly IServiceProvider _services;
-        private readonly Channel<string> _input = Channel.CreateUnbounded<string>();
+        private readonly Action _onCompleted;
+        private readonly Channel<string> _input = Channel.CreateBounded<string>(new BoundedChannelOptions(100)
+        {
+            FullMode = BoundedChannelFullMode.Wait,
+            SingleReader = true,
+            SingleWriter = false
+        });
         private readonly CancellationTokenSource _cancellation = new();
         private readonly CancellationToken _cancellationToken;
         private readonly object _eventLock = new();
         private readonly Queue<TerminalEvent> _events = new();
+        private readonly object _userNameLock = new();
         private Task? _runningTask;
         private long _nextSequence;
+        private int _disposed;
+        private bool _hasReceivedUserName;
+        private string? _userName;
 
-        internal TerminalSession(string id, string? name, IHubContext<TerminalHub> hub, IServiceProvider services)
+        internal TerminalSession(string id, string? name, IHubContext<TerminalHub> hub, IServiceProvider services, Action onCompleted)
         {
             Id = id;
             Name = string.IsNullOrWhiteSpace(name) ? "JOB ASSISTANT APP" : name.Trim();
             _hub = hub;
             _services = services;
+            _onCompleted = onCompleted;
             _cancellationToken = _cancellation.Token;
         }
 
         public string Id { get; }
         public string Name { get; }
+        public string? UserName
+        {
+            get
+            {
+                lock (_userNameLock)
+                {
+                    return _userName;
+                }
+            }
+        }
         public bool IsRunning => _runningTask is { IsCompleted: false };
 
         internal void Start()
@@ -117,16 +146,37 @@ namespace TerminalApi
                 catch (ChannelClosedException) when (_cancellation.IsCancellationRequested)
                 {
                 }
-                finally
-                {
-                    _cancellation.Dispose();
-                }
             });
+            _ = _runningTask.ContinueWith(
+                _ => _onCompleted(),
+                CancellationToken.None,
+                TaskContinuationOptions.ExecuteSynchronously,
+                TaskScheduler.Default);
         }
 
         public bool EnqueueInput(string? value)
         {
-            return IsRunning && _input.Writer.TryWrite(NormalizeInput(value));
+            if (!IsRunning)
+            {
+                return false;
+            }
+
+            string normalizedInput = NormalizeInput(value);
+            lock (_userNameLock)
+            {
+                if (!_input.Writer.TryWrite(normalizedInput))
+                {
+                    return false;
+                }
+
+                if (!_hasReceivedUserName)
+                {
+                    _userName = normalizedInput.Trim();
+                    _hasReceivedUserName = true;
+                }
+            }
+
+            return true;
         }
 
         public static string NormalizeInput(string? value)
@@ -172,8 +222,14 @@ namespace TerminalApi
 
         public void Dispose()
         {
+            if (Interlocked.Exchange(ref _disposed, 1) != 0)
+            {
+                return;
+            }
+
             _cancellation.Cancel();
             _input.Writer.TryComplete();
+            _cancellation.Dispose();
         }
     }
 }

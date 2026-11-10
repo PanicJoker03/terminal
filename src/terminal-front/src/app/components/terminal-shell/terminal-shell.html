@@ -1,5 +1,5 @@
 <section class="terminal-shell" aria-label="Terminal shell">
-  <div class="shell-layout" [class.jobs-visible]="isJobsPanelVisible() || isTasksPanelVisible()">
+  <div class="shell-layout" [class.panel-visible]="isJobsPanelVisible() || isTasksPanelVisible() || isClientChartVisible() || isBossChartVisible() || isEisenhowerMatrixVisible()">
     @if (isTasksPanelVisible()) {
     <aside class="jobs-panel tasks-panel" aria-label="Daily tasks panel">
       <div class="jobs-panel-header"><h2>Daily Tasks</h2></div>
@@ -27,6 +27,16 @@
 
       <div class="jobs-panel-table-wrap">
         <table mat-table [dataSource]="jobRows()" class="jobs-table" aria-label="Job applications grid">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="timestamp">
+            <th mat-header-cell *matHeaderCellDef>Timestamp</th>
+            <td mat-cell *matCellDef="let row">{{ row.timestamp | date:'yyyy-MM-dd HH:mm' }}</td>
+          </ng-container>
+
           <ng-container matColumnDef="company">
             <th mat-header-cell *matHeaderCellDef>Company</th>
             <td mat-cell *matCellDef="let row">{{ row.company }}</td>
@@ -42,6 +52,26 @@
             <td mat-cell *matCellDef="let row">{{ row.status }}</td>
           </ng-container>
 
+          <ng-container matColumnDef="modality">
+            <th mat-header-cell *matHeaderCellDef>Modality</th>
+            <td mat-cell *matCellDef="let row">{{ row.modality }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="priority">
+            <th mat-header-cell *matHeaderCellDef>Priority</th>
+            <td mat-cell *matCellDef="let row">{{ row.priority }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="payment">
+            <th mat-header-cell *matHeaderCellDef>Payment</th>
+            <td mat-cell *matCellDef="let row">{{ row.payment }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="origin">
+            <th mat-header-cell *matHeaderCellDef>Origin</th>
+            <td mat-cell *matCellDef="let row">{{ row.origin }}</td>
+          </ng-container>
+
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
@@ -53,6 +83,18 @@
           <p>No job applications loaded.</p>
         }
       </div>
+    </aside>
+    } @else if (isClientChartVisible()) {
+    <aside class="jobs-panel client-panel" aria-label="Client chart panel">
+      <app-client-chart></app-client-chart>
+    </aside>
+    } @else if (isBossChartVisible()) {
+    <aside class="jobs-panel client-panel" aria-label="Boss chart panel">
+      <app-boss-chart></app-boss-chart>
+    </aside>
+    } @else if (isEisenhowerMatrixVisible()) {
+    <aside class="jobs-panel client-panel" aria-label="Eisenhower matrix panel">
+      <app-eisenhower-matrix></app-eisenhower-matrix>
     </aside>
     }
 
