@@ -19,4 +19,10 @@ public class JobApplication
     public string Modality { get; set; } = "on-site";
 
     public string Priority { get; set; } = "C";
+
+    public string? Contact { get; set; }
+
+    public string? RhName { get; set; }
+
+    public string? Channel { get; set; }
 }

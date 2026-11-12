@@ -14,7 +14,10 @@ public class JobApplicationRepository(TerminalDbContext context) : IJobApplicati
         string payment,
         string origin,
         string modality = "on-site",
-        string priority = "C")
+        string priority = "C",
+        string? contact = null,
+        string? rhName = null,
+        string? channel = null)
     {
         var application = new JobApplication
         {
@@ -25,13 +28,18 @@ public class JobApplicationRepository(TerminalDbContext context) : IJobApplicati
             Payment = payment,
             Origin = origin,
             Modality = string.IsNullOrWhiteSpace(modality) ? "on-site" : modality,
-            Priority = string.IsNullOrWhiteSpace(priority) ? "C" : priority
+            Priority = string.IsNullOrWhiteSpace(priority) ? "C" : priority,
+            Contact = NullIfEmpty(contact),
+            RhName = NullIfEmpty(rhName),
+            Channel = NullIfEmpty(channel)
         };
 
         context.JobApplications.Add(application);
         context.SaveChanges();
         return application;
     }
+
+    private static string? NullIfEmpty(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
     public IReadOnlyList<JobApplication> List()
     {

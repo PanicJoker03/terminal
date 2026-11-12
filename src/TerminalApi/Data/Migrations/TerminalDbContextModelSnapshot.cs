@@ -70,6 +70,12 @@ namespace TerminalApi.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Channel")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Contact")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Modality")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -89,6 +95,9 @@ namespace TerminalApi.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValue("C");
+
+                    b.Property<string>("RhName")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Role")
                         .IsRequired()

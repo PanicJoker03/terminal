@@ -23,6 +23,10 @@ add this commands
 * ai, opens chatgpt
 * journal, daily journal capture 
 
+## INTERVIEW PROTIP
+
+* Poner en cv que el contrato fue por proyecto
+
 store tasks in sqlite database
 permit more complex tasks (time span various days)
 
