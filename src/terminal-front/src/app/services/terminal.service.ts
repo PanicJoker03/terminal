@@ -19,6 +19,9 @@ export interface JobApplication {
   origin: string;
   modality: string;
   priority: string;
+  contact: string | null;
+  rhName: string | null;
+  channel: string | null;
 }
 
 export interface PriorityTask {

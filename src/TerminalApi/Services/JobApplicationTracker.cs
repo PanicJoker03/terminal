@@ -96,7 +96,16 @@ namespace TerminalApi.Services
             terminal.PrintLine("origin:");
             string origin = (terminal.ReadLine() ?? "").Trim();
 
-            repository.Create(DateTime.Now, company, role, status, payment, origin, modality, priority);
+            terminal.PrintLine("contact:");
+            string? contact = ReadOptionalLine();
+
+            terminal.PrintLine("RH name:");
+            string? rhName = ReadOptionalLine();
+
+            terminal.PrintLine("channel:");
+            string? channel = ReadOptionalLine();
+
+            repository.Create(DateTime.Now, company, role, status, payment, origin, modality, priority, contact, rhName, channel);
 
             terminal.PrintLine("application saved successfully.");
             terminal.PrintLine("press any key to return...");
@@ -191,7 +200,7 @@ namespace TerminalApi.Services
         {
             var rows = new List<string[]>
             {
-                new[] { "ID", "TIMESTAMP", "COMPANY", "ROLE", "STATUS", "MODALITY", "PRIORITY", "PAYMENT", "ORIGIN" }
+                new[] { "ID", "TIMESTAMP", "COMPANY", "ROLE", "STATUS", "MODALITY", "PRIORITY", "PAYMENT", "ORIGIN", "CONTACT", "RH NAME", "CHANNEL" }
             };
             rows.AddRange(applications.Select(application => new[]
             {
@@ -203,7 +212,10 @@ namespace TerminalApi.Services
                 application.Modality,
                 application.Priority,
                 application.Payment,
-                application.Origin
+                application.Origin,
+                application.Contact ?? "",
+                application.RhName ?? "",
+                application.Channel ?? ""
             }));
 
             if (rows.Count == 0) return;
@@ -237,6 +249,12 @@ namespace TerminalApi.Services
                 terminal.PrintLine(rowStr);
             }
             terminal.PrintLine(border);
+        }
+
+        private string? ReadOptionalLine()
+        {
+            string value = (terminal.ReadLine() ?? "").Trim();
+            return string.IsNullOrWhiteSpace(value) ? null : value;
         }
 
     }

@@ -13,7 +13,10 @@ public sealed record JobApplicationResponse(
     string Payment,
     string Origin,
     string Modality,
-    string Priority);
+    string Priority,
+    string? Contact,
+    string? RhName,
+    string? Channel);
 
 /// <summary>HTTP endpoints for terminal-related data outside the SignalR hub.</summary>
 public sealed record PriorityTaskUpdate(bool Completed);
@@ -37,7 +40,10 @@ public sealed class TerminalController(IJobApplicationRepository jobApplications
                 application.Payment,
                 application.Origin,
                 application.Modality,
-                application.Priority))
+                application.Priority,
+                application.Contact,
+                application.RhName,
+                application.Channel))
             .ToArray();
 
         return Ok(applications);

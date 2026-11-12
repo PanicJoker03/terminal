@@ -37,6 +37,9 @@ public class TerminalDbContext(DbContextOptions<TerminalDbContext> options) : Db
             entity.Property(application => application.Priority)
                 .IsRequired()
                 .HasDefaultValue("C");
+            entity.Property(application => application.Contact);
+            entity.Property(application => application.RhName);
+            entity.Property(application => application.Channel);
 
             entity.HasIndex(application => application.Timestamp);
         });

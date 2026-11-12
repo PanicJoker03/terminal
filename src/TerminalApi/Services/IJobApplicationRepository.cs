@@ -12,7 +12,10 @@ public interface IJobApplicationRepository
         string payment,
         string origin,
         string modality = "on-site",
-        string priority = "C");
+        string priority = "C",
+        string? contact = null,
+        string? rhName = null,
+        string? channel = null);
 
     IReadOnlyList<JobApplication> List();
 
