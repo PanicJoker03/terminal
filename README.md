@@ -9,17 +9,17 @@ add this commands
 
 * ok,pomodoro, starts panel with pomodoro timer
 * ok,eisenhower, start 4 quad grid to clasify tasks 
-* trello, opens trello
-* github, opens github
-* linkedin, opens linkedin
+* ok,trello, opens trello
+* ok,github, opens github
+* ok,linkedin, opens linkedin
 * courses, add, update courses status
 * cv, configure skills, jobs etc -> generate cv yaml
 * agenda, configure events, store on sqlite
-* todo, enumerates incompleted tasks
+* ok, todo, enumerates incompleted tasks
 * plan, starts a plan
 * gantt
 * boss --status, manage multiple bosses
-* creed, prints the creed
+* ok, creed, prints the creed
 * ai, opens chatgpt
 * journal, daily journal capture 
 
@@ -33,6 +33,6 @@ ok chart
 save clients on sqlite db
 
 login
-show username on the command prompt
+ok, show username on the command prompt
 
 remove all front-end artifacts from API project

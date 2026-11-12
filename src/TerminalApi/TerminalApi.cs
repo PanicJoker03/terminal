@@ -67,6 +67,10 @@ namespace TerminalApi
                 case "tasks":
                     prioritiesChecker.TakePriorities();
                     break;
+
+                case "todo":
+                    PrintIncompleteTasks();
+                    break;
                 
                 // JOB APPLICATIONS
                 case "jobs":
@@ -200,6 +204,25 @@ namespace TerminalApi
             catch
             {
                 terminal.PrintLine("no record found");
+            }
+
+            terminal.WaitUserInput();
+        }
+
+        private void PrintIncompleteTasks()
+        {
+            terminal.ClearConsole();
+            IReadOnlyList<DatedPriorityTask> tasks = priorityTasks.LoadIncompleteTasks();
+            if (tasks.Count == 0)
+            {
+                terminal.PrintLine("no incomplete tasks found");
+            }
+            else
+            {
+                foreach (DatedPriorityTask item in tasks)
+                {
+                    terminal.PrintLine($"{item.Date}: {item.Task.Text}");
+                }
             }
 
             terminal.WaitUserInput();
