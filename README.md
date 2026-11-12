@@ -36,3 +36,4 @@ login
 ok, show username on the command prompt
 
 remove all front-end artifacts from API project
+A sofware that helps me to resolve, make some tasks and be at peace.
