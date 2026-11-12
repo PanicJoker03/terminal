@@ -33,6 +33,36 @@ public sealed class PriorityTasksStore(IConfiguration configuration) : IPriority
         return ReadMarkdown(markdownPath);
     }
 
+    public IReadOnlyList<DatedPriorityTask> LoadIncompleteTasks()
+    {
+        if (!Directory.Exists(tasksDirectory))
+        {
+            return [];
+        }
+
+        return Directory.EnumerateFiles(tasksDirectory, "OUT_*.md")
+            .Select(path => new
+            {
+                Path = path,
+                Date = Path.GetFileNameWithoutExtension(path).Replace("OUT_", "", StringComparison.Ordinal)
+            })
+            .Where(file => file.Date.Length == 8 && DateTime.TryParseExact(
+                file.Date,
+                "ddMMyyyy",
+                null,
+                System.Globalization.DateTimeStyles.None,
+                out _))
+            .OrderBy(file => DateTime.ParseExact(
+                file.Date,
+                "ddMMyyyy",
+                null,
+                System.Globalization.DateTimeStyles.None))
+            .SelectMany(file => ReadMarkdown(file.Path)
+                .Where(task => !task.Completed)
+                .Select(task => new DatedPriorityTask(file.Date, task)))
+            .ToArray();
+    }
+
     public void SetCompleted(string date, int id, bool completed)
     {
         ValidateDate(date);
