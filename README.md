@@ -22,6 +22,7 @@ add this commands
 * ok, creed, prints the creed
 * ai, opens chatgpt
 * journal, daily journal capture 
+* homework, manage homework dutties 
 
 ## INTERVIEW PROTIP
 

@@ -7,6 +7,9 @@ public class TerminalDbContext(DbContextOptions<TerminalDbContext> options) : Db
 {
     public DbSet<JobApplication> JobApplications => Set<JobApplication>();
     public DbSet<Interview> Interviews => Set<Interview>();
+    public DbSet<Course> Courses => Set<Course>();
+    public DbSet<Book> Books => Set<Book>();
+    public DbSet<Client> Clients => Set<Client>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -69,6 +72,35 @@ public class TerminalDbContext(DbContextOptions<TerminalDbContext> options) : Db
                 .IsRequired();
 
             entity.HasIndex(interview => new { interview.Month, interview.Day });
+        });
+
+        modelBuilder.Entity<Course>(entity =>
+        {
+            entity.ToTable("Courses");
+            entity.HasKey(course => course.Id);
+            entity.Property(course => course.Id).ValueGeneratedOnAdd();
+            entity.Property(course => course.Name).IsRequired();
+            entity.Property(course => course.Progress).IsRequired();
+            entity.Property(course => course.Status).IsRequired();
+        });
+
+        modelBuilder.Entity<Book>(entity =>
+        {
+            entity.ToTable("Books");
+            entity.HasKey(book => book.Id);
+            entity.Property(book => book.Id).ValueGeneratedOnAdd();
+            entity.Property(book => book.Name).IsRequired();
+            entity.Property(book => book.Status).IsRequired();
+        });
+
+        modelBuilder.Entity<Client>(entity =>
+        {
+            entity.ToTable("Clients");
+            entity.HasKey(client => client.Id);
+            entity.Property(client => client.Id).ValueGeneratedOnAdd();
+            entity.Property(client => client.Name).IsRequired();
+            entity.Property(client => client.Projects).IsRequired();
+            entity.Property(client => client.Status).IsRequired();
         });
     }
 }

@@ -20,6 +20,9 @@ namespace TerminalApi
         private readonly ICounter counter;
         private readonly IPomodoro pomodoro;
         private readonly IPriorityTasksStore priorityTasks;
+        private readonly ICourseTracker courseTracker;
+        private readonly IBookTracker bookTracker;
+        private readonly IClientTracker clientTracker;
         private readonly string tasksDirectory;
 
         public TerminalApi(
@@ -34,6 +37,9 @@ namespace TerminalApi
             ICounter counter,
             IPomodoro pomodoro,
             IPriorityTasksStore priorityTasks,
+            ICourseTracker courseTracker,
+            IBookTracker bookTracker,
+            IClientTracker clientTracker,
             IConfiguration configuration)
         {
             this.name = name;
@@ -48,6 +54,9 @@ namespace TerminalApi
             this.realityCheck = realityCheck;
             this.pomodoro = pomodoro;
             this.priorityTasks = priorityTasks;
+            this.courseTracker = courseTracker;
+            this.bookTracker = bookTracker;
+            this.clientTracker = clientTracker;
             string configuredTasksDirectory = configuration["FilePaths:Tasks"] ?? "tasks";
             tasksDirectory = Path.GetFullPath(configuredTasksDirectory, AppContext.BaseDirectory);
         }
@@ -75,6 +84,14 @@ namespace TerminalApi
                 // JOB APPLICATIONS
                 case "jobs":
                     jobApplicationTracker.ManageApplications();
+                    break;
+
+                case "courses":
+                    courseTracker.ManageCourses();
+                    break;
+
+                case "books":
+                    bookTracker.ManageBooks();
                     break;
                 
                 // COUNT
@@ -131,7 +148,7 @@ namespace TerminalApi
                     break;
                 
                 case "clients":
-                    PrintClients();
+                    clientTracker.ManageClients();
                     break;
 
                 case "lookup":
@@ -287,14 +304,6 @@ namespace TerminalApi
             terminal.PrintLiteralLine("Nothing Is Personal.");
             terminal.PrintLiteralLine("");
             terminal.PrintLiteralLine("Anything Outside the Work Is a Distraction.");
-            terminal.WaitUserInput();
-        }
-        
-        private void PrintClients()
-        {
-            //todo: order something, a sort maybe
-            terminal.ClearConsole();
-            terminal.PrintLine($"who are your clients?");
             terminal.WaitUserInput();
         }
         

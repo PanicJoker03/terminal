@@ -135,8 +135,9 @@ namespace TerminalApi
 
                 try
                 {
+                    using IServiceScope scope = _services.CreateScope();
                     ActivatorUtilities.CreateInstance<TerminalApi>(
-                        _services,
+                        scope.ServiceProvider,
                         Name,
                         ConsoleColor.Yellow).Run();
                 }
