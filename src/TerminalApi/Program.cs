@@ -28,10 +28,16 @@ builder.Services.AddDbContext<TerminalDbContext>(options =>
     options.UseSqlite(sqliteConnectionString.ConnectionString));
 builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
 builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddSingleton<IPriorityTasksStore, PriorityTasksStore>();
 builder.Services.AddTransient<IPrioritiesChecker, PrioritiesChecker>();
 builder.Services.AddTransient<IJobApplicationTracker, JobApplicationTracker>();
 builder.Services.AddTransient<IInterviewScheduler, InterviewScheduler>();
+builder.Services.AddTransient<ICourseTracker, CourseTracker>();
+builder.Services.AddTransient<IBookTracker, BookTracker>();
+builder.Services.AddTransient<IClientTracker, ClientTracker>();
 builder.Services.AddTransient<IBoss, Boss>();
 builder.Services.AddTransient<IWork, Work>();
 builder.Services.AddTransient<IRealityCheck, RealityCheck>();
