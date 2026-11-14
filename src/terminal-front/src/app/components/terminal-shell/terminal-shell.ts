@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
+import { SplitAreaComponent, SplitComponent } from 'angular-split';
 import { BossChartComponent } from '../boss-chart/boss-chart';
 import { ClientChartComponent } from '../client-chart/client-chart';
 import { EisenhowerMatrixComponent } from '../eisenhower-matrix/eisenhower-matrix';
@@ -10,7 +11,7 @@ import { JobApplication, PriorityTask, TerminalService } from '../../services/te
 @Component({
   selector: 'app-terminal-shell',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatTableModule, ClientChartComponent, BossChartComponent, EisenhowerMatrixComponent],
+  imports: [CommonModule, FormsModule, MatTableModule, SplitComponent, SplitAreaComponent, ClientChartComponent, BossChartComponent, EisenhowerMatrixComponent],
   templateUrl: './terminal-shell.html',
   styleUrl: './terminal-shell.scss',
 })

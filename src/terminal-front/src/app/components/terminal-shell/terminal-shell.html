@@ -1,5 +1,6 @@
 <section class="terminal-shell" aria-label="Terminal shell">
-  <div class="shell-layout" [class.panel-visible]="isJobsPanelVisible() || isTasksPanelVisible() || isClientChartVisible() || isBossChartVisible() || isEisenhowerMatrixVisible()">
+  <as-split class="shell-layout" direction="horizontal" unit="percent" [gutterSize]="8" [useTransition]="false" gutterAriaLabel="Resize side panel">
+    <as-split-area [size]="50" [minSize]="20" [maxSize]="75" [visible]="isJobsPanelVisible() || isTasksPanelVisible() || isClientChartVisible() || isBossChartVisible() || isEisenhowerMatrixVisible()">
     @if (isTasksPanelVisible()) {
     <aside class="jobs-panel tasks-panel" aria-label="Daily tasks panel">
       <div class="jobs-panel-header"><h2>Daily Tasks</h2></div>
@@ -97,7 +98,8 @@
       <app-eisenhower-matrix></app-eisenhower-matrix>
     </aside>
     }
-
+    </as-split-area>
+    <as-split-area [size]="50" [minSize]="25">
     <div class="terminal-panel">
       <header class="terminal-bar">
         <div class="traffic-lights" aria-hidden="true">
@@ -134,5 +136,6 @@
         />
       </form>
     </div>
-  </div>
+    </as-split-area>
+  </as-split>
 </section>

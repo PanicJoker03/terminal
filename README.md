@@ -3,6 +3,7 @@
 # Terminal
 
 A sofware that helps me to resolve, make some $$$ and be at peace.
+Also, skip a software deploy engineering. 
 
 TODO: 
 add this commands
@@ -23,6 +24,7 @@ add this commands
 * ai, opens chatgpt
 * journal, daily journal capture 
 * homework, manage homework dutties 
+* Better DDD for services
 
 ## INTERVIEW PROTIP
 
