@@ -76,3 +76,16 @@ This software is what Homer S. will say at that chapter
 ### Chat last words...
 
 REST endpoints create, inspect, send input to, poll events from, and delete terminal sessions. Each session has its own input queue and output stream, so clients won’t share terminal state. The SignalR hub at /ws/terminal supports live events; the API also buffers recent output for REST polling. See TerminalApi.http and README.md for the client workflow. OpenAPI is available at /openapi/v1.json in Development.
+# JWT authentication
+
+From the repository root, run `./init.sh`. It prompts for the API username and password, generates a fresh JWT signing key, and starts the API and Angular development server. Open `http://localhost:4200`; press Ctrl+C to stop both servers. The generated key is only kept in that process environment, so tokens become invalid after restarting the script.
+
+The API requires a bearer token for application endpoints. Configure these values as environment variables before starting the API:
+
+```sh
+Auth__Username=your-user
+Auth__Password='a-long-password'
+Jwt__Key='at-least-32-random-bytes-of-secret-material'
+```
+
+Generate a signing key with `openssl rand -base64 48`. Keep it private and use the same key on every API instance. The frontend presents a sign-in form and keeps the eight-hour access token in session storage. Obtain a token directly with `POST /api/auth/login` and a JSON body containing `username` and `password`; send it on protected requests as `Authorization: Bearer <accessToken>`. `/api/version` remains public.

@@ -38,7 +38,7 @@ public static class TerminalSessionEndpoints
 {
     public static WebApplication MapTerminalSessionEndpoints(this WebApplication app)
     {
-        var sessions = app.MapGroup("/api/terminal-sessions").WithTags("Terminal sessions");
+        var sessions = app.MapGroup("/api/terminal-sessions").WithTags("Terminal sessions").RequireAuthorization();
 
         sessions.MapPost("/", CreateSession)
             .WithName("CreateTerminalSession")

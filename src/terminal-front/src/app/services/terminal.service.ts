@@ -73,9 +73,28 @@ export class TerminalService {
   private lastEventSequence = 0;
   private pollingHandle: ReturnType<typeof globalThis.setTimeout> | null = null;
 
+  get isAuthenticated(): boolean { return !!sessionStorage.getItem('terminal_access_token'); }
+
+  async login(username: string, password: string): Promise<void> {
+    const response = await fetch(`${this.baseUrl}/api/auth/login`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    if (!response.ok) throw new Error('Invalid username or password');
+    const payload = await response.json() as { accessToken: string };
+    sessionStorage.setItem('terminal_access_token', payload.accessToken);
+  }
+
+  private authorizedFetch(input: string, init: RequestInit = {}): Promise<Response> {
+    const headers = new Headers(init.headers);
+    const token = sessionStorage.getItem('terminal_access_token');
+    if (token) headers.set('Authorization', `Bearer ${token}`);
+    return fetch(input, { ...init, headers });
+  }
+
   async getJobApplications(): Promise<JobApplication[]> {
     this.requireInitialization();
-    const response = await fetch(`${this.baseUrl}/api/terminal/jobs-applications`);
+    const response = await this.authorizedFetch(`${this.baseUrl}/api/terminal/jobs-applications`);
 
     if (!response.ok) {
       throw new Error(`job applications request failed (${response.status})`);
@@ -91,7 +110,7 @@ export class TerminalService {
 
   async getPriorityTasks(date = this.todayDate()): Promise<PriorityTask[]> {
     this.requireInitialization();
-    const response = await fetch(`${this.baseUrl}/api/terminal/tasks?date=${encodeURIComponent(date)}`);
+    const response = await this.authorizedFetch(`${this.baseUrl}/api/terminal/tasks?date=${encodeURIComponent(date)}`);
     if (!response.ok) throw new Error(`tasks request failed (${response.status})`);
     const payload: unknown = await response.json();
     if (!Array.isArray(payload)) throw new Error('backend returned an invalid tasks response');
@@ -100,7 +119,7 @@ export class TerminalService {
 
   async setPriorityTaskCompleted(id: number, completed: boolean, date = this.todayDate()): Promise<void> {
     this.requireInitialization();
-    const response = await fetch(`${this.baseUrl}/api/terminal/tasks/${encodeURIComponent(date)}/${id}`, {
+    const response = await this.authorizedFetch(`${this.baseUrl}/api/terminal/tasks/${encodeURIComponent(date)}/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ completed }),
@@ -122,7 +141,7 @@ export class TerminalService {
     this.addLine('system', `creating terminal session: ${name}`);
 
     try {
-      const response = await fetch(`${this.baseUrl}/api/terminal-sessions`, {
+      const response = await this.authorizedFetch(`${this.baseUrl}/api/terminal-sessions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -205,7 +224,7 @@ export class TerminalService {
     }
 
     try {
-      const response = await fetch(`${this.baseUrl}/api/terminal-sessions/${this.sessionId}`, {
+      const response = await this.authorizedFetch(`${this.baseUrl}/api/terminal-sessions/${this.sessionId}`, {
         method: 'DELETE',
       });
 
@@ -250,7 +269,7 @@ export class TerminalService {
       return;
     }
 
-    const response = await fetch(`${this.baseUrl}/api/terminal-sessions/${this.sessionId}/input`, {
+    const response = await this.authorizedFetch(`${this.baseUrl}/api/terminal-sessions/${this.sessionId}/input`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -272,7 +291,7 @@ export class TerminalService {
 
     try {
       const params = new URLSearchParams({ after: String(this.lastEventSequence) });
-      const response = await fetch(
+      const response = await this.authorizedFetch(
         `${this.baseUrl}/api/terminal-sessions/${this.sessionId}/events?${params.toString()}`,
       );
 

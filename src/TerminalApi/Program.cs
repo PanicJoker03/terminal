@@ -3,10 +3,43 @@ using TerminalApi.Api;
 using TerminalApi.Data;
 using TerminalApi.Services;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+string jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Configure Jwt:Key with a random secret of at least 32 characters.");
+string authUsername = builder.Configuration["Auth:Username"] ?? throw new InvalidOperationException("Configure Auth:Username.");
+string authPassword = builder.Configuration["Auth:Password"] ?? throw new InvalidOperationException("Configure Auth:Password.");
+if (Encoding.UTF8.GetByteCount(jwtKey) < 32) throw new InvalidOperationException("Jwt:Key must be at least 32 bytes.");
+const string jwtIssuer = "terminal-api";
+const string jwtAudience = "terminal-front";
+var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            string? accessToken = context.Request.Query["access_token"];
+            if (!string.IsNullOrEmpty(accessToken) && context.HttpContext.Request.Path.StartsWithSegments("/ws/terminal"))
+                context.Token = accessToken;
+            return Task.CompletedTask;
+        }
+    };
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true, ValidIssuer = jwtIssuer,
+        ValidateAudience = true, ValidAudience = jwtAudience,
+        ValidateIssuerSigningKey = true, IssuerSigningKey = signingKey,
+        ValidateLifetime = true, ClockSkew = TimeSpan.FromSeconds(30)
+    };
+});
+builder.Services.AddAuthorization(options => options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
 
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
@@ -73,6 +106,8 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
@@ -82,10 +117,27 @@ if (app.Environment.IsDevelopment())
 string assemblyHash = Convert.ToHexString(
     System.Security.Cryptography.SHA256.HashData(File.ReadAllBytes(typeof(Program).Assembly.Location))).ToLowerInvariant();
 DateTimeOffset startedAt = DateTimeOffset.UtcNow;
-app.MapGet("/api/version", () => Results.Ok(new { sha256 = assemblyHash, startedAt }));
+app.MapGet("/api/version", () => Results.Ok(new { sha256 = assemblyHash, startedAt })).AllowAnonymous();
+app.MapPost("/api/auth/login", (LoginRequest request) =>
+{
+    if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
+        Encoding.UTF8.GetBytes(request.Username ?? ""), Encoding.UTF8.GetBytes(authUsername))
+        || !System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
+            Encoding.UTF8.GetBytes(request.Password ?? ""), Encoding.UTF8.GetBytes(authPassword)))
+        return Results.Unauthorized();
 
-app.MapHub<TerminalHub>("/ws/terminal");
+    DateTime expires = DateTime.UtcNow.AddHours(8);
+    var claims = new[] { new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, authUsername) };
+    var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(jwtIssuer, jwtAudience, claims,
+        notBefore: DateTime.UtcNow, expires: expires,
+        signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256));
+    return Results.Ok(new { accessToken = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token), expiresAt = expires });
+}).AllowAnonymous();
+
+app.MapHub<TerminalHub>("/ws/terminal").RequireAuthorization();
 app.MapControllers();
 app.MapTerminalSessionEndpoints();
 
 app.Run();
+
+public sealed record LoginRequest(string? Username, string? Password);
