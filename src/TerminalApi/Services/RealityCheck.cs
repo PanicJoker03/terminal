@@ -10,11 +10,9 @@ namespace TerminalApi.Services
         
         public void CoinToss()
         {
-            int reality = new Random().Next(0, 2);
-
             terminal.ClearConsole();
             terminal.PrintLine("reality check");
-            terminal.PrintLine(reality);
+            terminal.PrintLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
             terminal.PrintLine("press any key to finalize module...");
             terminal.WaitUserInput();
