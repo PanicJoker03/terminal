@@ -79,6 +79,14 @@ export class TerminalShellComponent implements AfterViewChecked {
       window.open('https://candidato.occ.com.mx/dashboard', '_blank', 'noopener,noreferrer');
     }
 
+    if (this.terminalService.isInitialized && normalized === 'indeed') {
+      window.open('https://mx.indeed.com/?from=gnav-homepage--homepage-frontend', '_blank', 'noopener,noreferrer');
+    }
+
+    if (this.terminalService.isInitialized && normalized === 'talenteca') {
+      window.open('https://www.talenteca.com', '_blank', 'noopener,noreferrer');
+    }
+
     if (!this.terminalService.isInitialized) {
       void this.terminalService.sendCommand(text);
       this.command.set('');

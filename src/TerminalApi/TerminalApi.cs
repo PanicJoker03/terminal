@@ -179,6 +179,14 @@ namespace TerminalApi
                     terminal.PrintLine("opening OCC");
                     break;
 
+                case "indeed":
+                    terminal.PrintLine("opening Indeed");
+                    break;
+
+                case "talenteca":
+                    terminal.PrintLine("opening Talenteca");
+                    break;
+
                 case "interview":
                     interviewScheduler.ManageInterviews();
                     break;

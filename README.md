@@ -13,6 +13,8 @@ add this commands
 * ok,trello, opens trello
 * ok,github, opens github
 * ok,linkedin, opens linkedin
+* ok,indeed, opens Indeed
+* ok,talenteca, opens Talenteca
 * courses, add, update courses status
 * cv, configure skills, jobs etc -> generate cv yaml
 * agenda, configure events, store on sqlite
