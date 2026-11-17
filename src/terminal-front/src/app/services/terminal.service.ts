@@ -54,6 +54,8 @@ interface TerminalEventPayload {
 })
 export class TerminalService {
   readonly userName = signal('guest');
+  readonly authenticated = signal(this.hasStoredToken());
+  readonly authenticationError = signal('');
 
   private readonly linesSubject = new BehaviorSubject<TerminalLine[]>([
     { type: 'system', text: 'terminal ready' },
@@ -73,7 +75,7 @@ export class TerminalService {
   private lastEventSequence = 0;
   private pollingHandle: ReturnType<typeof globalThis.setTimeout> | null = null;
 
-  get isAuthenticated(): boolean { return !!sessionStorage.getItem('terminal_access_token'); }
+  get isAuthenticated(): boolean { return this.authenticated(); }
 
   async login(username: string, password: string): Promise<void> {
     const response = await fetch(`${this.baseUrl}/api/auth/login`, {
@@ -83,13 +85,35 @@ export class TerminalService {
     if (!response.ok) throw new Error('Invalid username or password');
     const payload = await response.json() as { accessToken: string };
     sessionStorage.setItem('terminal_access_token', payload.accessToken);
+    this.authenticated.set(true);
+    this.authenticationError.set('');
   }
 
-  private authorizedFetch(input: string, init: RequestInit = {}): Promise<Response> {
+  private async authorizedFetch(input: string, init: RequestInit = {}): Promise<Response> {
     const headers = new Headers(init.headers);
     const token = sessionStorage.getItem('terminal_access_token');
     if (token) headers.set('Authorization', `Bearer ${token}`);
-    return fetch(input, { ...init, headers });
+    const response = await fetch(input, { ...init, headers });
+    if (response.status === 401 && token) {
+      this.invalidateAuthentication();
+    }
+    return response;
+  }
+
+  private hasStoredToken(): boolean {
+    return typeof sessionStorage !== 'undefined' && !!sessionStorage.getItem('terminal_access_token');
+  }
+
+  private invalidateAuthentication(): void {
+    sessionStorage.removeItem('terminal_access_token');
+    this.authenticated.set(false);
+    this.authenticationError.set('Your sign-in expired or is no longer valid. Please sign in again.');
+    this.sessionId = null;
+    this.initialized = false;
+    this.hasProvidedName = false;
+    this.userName.set('guest');
+    this.lastEventSequence = 0;
+    this.clearPolling();
   }
 
   async getJobApplications(): Promise<JobApplication[]> {

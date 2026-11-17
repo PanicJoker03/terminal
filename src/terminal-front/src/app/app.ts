@@ -14,6 +14,9 @@ import { TerminalService } from './services/terminal.service';
       <main class="login">
         <form (ngSubmit)="submit()">
           <h1>Terminal</h1>
+          @if (authenticationError()) {
+            <p role="alert">{{ authenticationError() }}</p>
+          }
           <label>Username<input name="username" [(ngModel)]="username" autocomplete="username" required></label>
           <label>Password<input name="password" type="password" [(ngModel)]="password" autocomplete="current-password" required></label>
           @if (error()) {
@@ -28,7 +31,8 @@ import { TerminalService } from './services/terminal.service';
 })
 export class App {
   private readonly terminal = inject(TerminalService);
-  protected readonly authenticated = signal(this.terminal.isAuthenticated);
+  protected readonly authenticated = this.terminal.authenticated;
+  protected readonly authenticationError = this.terminal.authenticationError;
   protected username = '';
   protected password = '';
   protected readonly error = signal('');
