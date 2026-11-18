@@ -71,6 +71,10 @@ export class TerminalShellComponent implements AfterViewChecked {
       window.open('https://www.linkedin.com/feed/foryou/', '_blank', 'noopener,noreferrer');
     }
 
+    if (this.terminalService.isInitialized && normalized === 'ai') {
+      window.open('https://chatgpt.com/', '_blank', 'noopener,noreferrer');
+    }
+
     if (this.terminalService.isInitialized && normalized === 'computrabajo') {
       window.open('https://mx.computrabajo.com', '_blank', 'noopener,noreferrer');
     }

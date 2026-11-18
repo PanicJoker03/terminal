@@ -171,6 +171,10 @@ namespace TerminalApi
                     terminal.PrintLine("opening LinkedIn");
                     break;
 
+                case "ai":
+                    terminal.PrintLine("opening ChatGPT");
+                    break;
+
                 case "computrabajo":
                     terminal.PrintLine("opening Computrabajo");
                     break;

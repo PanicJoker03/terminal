@@ -8,25 +8,25 @@ Also, skip a software deploy engineering.
 TODO: 
 add this commands
 
-* ok,pomodoro, starts panel with pomodoro timer
-* ok,eisenhower, start 4 quad grid to clasify tasks 
-* ok,trello, opens trello
-* ok,github, opens github
-* ok,linkedin, opens linkedin
-* ok,indeed, opens Indeed
-* ok,talenteca, opens Talenteca
-* courses, add, update courses status
-* cv, configure skills, jobs etc -> generate cv yaml
-* agenda, configure events, store on sqlite
-* ok, todo, enumerates incompleted tasks
-* plan, starts a plan
-* gantt
-* boss --status, manage multiple bosses
-* ok, creed, prints the creed
-* ai, opens chatgpt
-* journal, daily journal capture 
-* homework, manage homework dutties 
-* Better DDD for services
+[x] pomodoro, starts panel with pomodoro timer
+[x] eisenhower, start 4 quad grid to clasify tasks 
+[x] trello, opens trello
+[x] github, opens github
+[x] linkedin, opens linkedin
+[x] indeed, opens Indeed
+[x] talenteca, opens Talenteca
+[x]  courses, add, update courses status
+[ ] cv, configure skills, jobs etc -> generate cv yaml
+[ ] agenda, configure events, store on sqlite
+[x]  todo, enumerates incompleted tasks
+[ ] plan, starts a plan
+[ ] gantt
+[ ] boss --status, manage multiple bosses
+[x]  creed, prints the creed
+[x] ai, opens chatgpt
+[ ] journal, daily journal capture 
+[ ] homework, manage homework dutties 
+[ ] Better DDD for services
 
 ## INTERVIEW PROTIP
 
