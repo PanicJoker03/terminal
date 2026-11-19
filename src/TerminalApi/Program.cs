@@ -64,8 +64,9 @@ builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
-builder.Services.AddSingleton<IPriorityTasksStore, PriorityTasksStore>();
-builder.Services.AddTransient<IPrioritiesChecker, PrioritiesChecker>();
+builder.Services.AddScoped<IPriorityTasksStore, PriorityTasksStore>();
+builder.Services.AddTransient<IPrioritiesChecker>(services =>
+    new PrioritiesChecker(services.GetRequiredService<IPriorityTasksStore>()));
 builder.Services.AddTransient<IJobApplicationTracker, JobApplicationTracker>();
 builder.Services.AddTransient<IInterviewScheduler, InterviewScheduler>();
 builder.Services.AddTransient<ICourseTracker, CourseTracker>();
@@ -97,6 +98,8 @@ using (var scope = app.Services.CreateScope())
 {
     TerminalDbContext dbContext = scope.ServiceProvider.GetRequiredService<TerminalDbContext>();
     dbContext.Database.Migrate();
+    IPriorityTasksStore priorityTasks = scope.ServiceProvider.GetRequiredService<IPriorityTasksStore>();
+    priorityTasks.ImportLegacyFiles();
 }
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions

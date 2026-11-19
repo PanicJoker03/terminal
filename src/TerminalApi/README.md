@@ -42,7 +42,7 @@ location /terminal-api/ {
 
 The browser reports `Status code: (null)` when the request never reaches the API at all (untrusted TLS certificate, missing proxy route, or API not running); accept the certificate for `https://aegis-hyper` in the browser and check `curl -i https://aegis-hyper/terminal-api/api/terminal-sessions`.
 
-Task and priority files use the local `tasks` and `results` directories by default. The container overrides these paths to `/var/lib/terminal-app/tasks` and `/var/lib/terminal-app/results`.
+Priority tasks are stored in SQLite. On startup, the application imports valid `OUT_ddMMyyyy.md` files from the tasks directory and legacy `OUT_ddMMyyyy.txt` files from the results directory. It removes each source file only after its tasks are stored and verified; files with conflicting database records or no readable tasks are kept for review. The local directories default to `tasks` and `results`; the container uses `/var/lib/terminal-app/tasks` and `/var/lib/terminal-app/results`, so mount `/var/lib/terminal-app` to preserve both the database and any files awaiting import.
 
 ### Jobs database
 

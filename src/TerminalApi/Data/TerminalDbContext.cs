@@ -10,6 +10,7 @@ public class TerminalDbContext(DbContextOptions<TerminalDbContext> options) : Db
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<Book> Books => Set<Book>();
     public DbSet<Client> Clients => Set<Client>();
+    public DbSet<PriorityTaskEntity> PriorityTasks => Set<PriorityTaskEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -101,6 +102,18 @@ public class TerminalDbContext(DbContextOptions<TerminalDbContext> options) : Db
             entity.Property(client => client.Name).IsRequired();
             entity.Property(client => client.Projects).IsRequired();
             entity.Property(client => client.Status).IsRequired();
+        });
+
+        modelBuilder.Entity<PriorityTaskEntity>(entity =>
+        {
+            entity.ToTable("PriorityTasks");
+            entity.HasKey(task => task.Id);
+            entity.Property(task => task.Id).ValueGeneratedOnAdd();
+            entity.Property(task => task.Date).IsRequired();
+            entity.Property(task => task.Position).IsRequired();
+            entity.Property(task => task.Text).IsRequired();
+            entity.Property(task => task.Completed).IsRequired();
+            entity.HasIndex(task => new { task.Date, task.Position }).IsUnique();
         });
     }
 }

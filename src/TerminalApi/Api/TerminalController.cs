@@ -49,7 +49,7 @@ public sealed class TerminalController(IJobApplicationRepository jobApplications
         return Ok(applications);
     }
 
-    /// <summary>Loads daily tasks from Markdown, converting a legacy text file when needed.</summary>
+    /// <summary>Loads daily tasks from SQLite.</summary>
     [HttpGet("tasks")]
     [ProducesResponseType<IReadOnlyList<PriorityTask>>(StatusCodes.Status200OK)]
     public ActionResult<IReadOnlyList<PriorityTask>> GetTasks([FromQuery] string? date = null)
@@ -64,7 +64,7 @@ public sealed class TerminalController(IJobApplicationRepository jobApplications
         }
     }
 
-    /// <summary>Updates a task checkbox and persists it to the day's Markdown file.</summary>
+    /// <summary>Updates a task completion state in SQLite.</summary>
     [HttpPut("tasks/{date}/{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public IActionResult SetTaskCompleted(string date, int id, [FromBody] PriorityTaskUpdate update)

@@ -23,7 +23,6 @@ namespace TerminalApi
         private readonly ICourseTracker courseTracker;
         private readonly IBookTracker bookTracker;
         private readonly IClientTracker clientTracker;
-        private readonly string tasksDirectory;
 
         public TerminalApi(
             string? name,
@@ -57,8 +56,6 @@ namespace TerminalApi
             this.courseTracker = courseTracker;
             this.bookTracker = bookTracker;
             this.clientTracker = clientTracker;
-            string configuredTasksDirectory = configuration["FilePaths:Tasks"] ?? "tasks";
-            tasksDirectory = Path.GetFullPath(configuredTasksDirectory, AppContext.BaseDirectory);
         }
 
         private void HandleCommand(string command)
@@ -332,19 +329,22 @@ namespace TerminalApi
 
             try
             {
-                var records = Directory.GetFiles(tasksDirectory, "OUT_*.md");
-
-                foreach (var record in records)
+                IReadOnlyList<string> dates = priorityTasks.ListDates();
+                if (dates.Count == 0)
                 {
-                    string fileName = Path.GetFileNameWithoutExtension(record);
-                    string datePart = fileName.Replace("OUT_", "");
-
-                    terminal.PrintLine(datePart);
+                    terminal.PrintLine("no records found");
+                }
+                else
+                {
+                    foreach (string date in dates)
+                    {
+                        terminal.PrintLine(date);
+                    }
                 }
             }
             catch
             {
-                terminal.PrintLine("error reading files");
+                terminal.PrintLine("error reading task dates");
             }
 
             terminal.WaitUserInput();

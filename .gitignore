@@ -5,6 +5,7 @@ Desktop.ini
 
 # IDEs and editor state
 .idea/
+.junie/
 .vs/
 *.suo
 *.user
@@ -13,6 +14,9 @@ Desktop.ini
 *.rsuser
 *.swp
 *.swo
+
+#
+/src/TerminalApi/terminal.db*
 
 # .NET build output and generated files
 [Bb]in/

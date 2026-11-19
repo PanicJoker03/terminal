@@ -180,6 +180,34 @@ namespace TerminalApi.Data.Migrations
 
                     b.ToTable("JobApplications", (string)null);
                 });
+
+            modelBuilder.Entity("TerminalApi.Domain.Entities.PriorityTaskEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Date")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Date", "Position")
+                        .IsUnique();
+
+                    b.ToTable("PriorityTasks", (string)null);
+                });
 #pragma warning restore 612, 618
         }
     }
